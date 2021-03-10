@@ -11,6 +11,7 @@ import {
   Badge,
 } from "@material-ui/core";
 import SideNav from "./SideNav";
+import { Link } from "react-router-dom";
 import { Menu, Person, ShoppingCart } from "@material-ui/icons";
 
 const Header = () => {
@@ -42,10 +43,15 @@ const Header = () => {
             </IconButton>
 
             <Hidden mdDown>
-              <Button color="inherit" size="large" style={{ marginLeft: 4 }}>
-                {" "}
+              <Button
+                color="inherit"
+                size="large"
+                style={{ marginLeft: 4 }}
+                component={Link}
+                to="/login"
+              >
                 <Person />
-                &nbsp; Sign In{" "}
+                &nbsp; Sign In
               </Button>
             </Hidden>
           </Box>

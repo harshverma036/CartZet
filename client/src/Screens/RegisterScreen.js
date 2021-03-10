@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import FormContainer from "../Components/FormCotainer";
 import { TextField, Button, Box, Typography } from "@material-ui/core";
-import { Link } from "react-router-dom";
 
-const Login = () => {
+const RegisterScreen = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -13,8 +14,20 @@ const Login = () => {
 
   return (
     <FormContainer>
-      <Typography variant="h3">Sign In</Typography>
+      <Typography variant="h3">Register</Typography>
       <Box component="form" mt={1} onSubmit={submitHandler}>
+        <TextField
+          placeholder="Enter name"
+          label="Full Name"
+          variant="outlined"
+          color="primary"
+          fullWidth
+          type="text"
+          margin="normal"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
         <TextField
           placeholder="Enter email"
           label="Email"
@@ -39,6 +52,18 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <TextField
+          placeholder="Confirm password"
+          label="Confirm Password"
+          variant="outlined"
+          color="primary"
+          type="password"
+          fullWidth
+          margin="normal"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
         <Button
           type="submit"
           variant="contained"
@@ -47,14 +72,11 @@ const Login = () => {
           size="large"
           style={{ marginTop: 10 }}
         >
-          Login
+          Register
         </Button>
-        <Typography style={{ marginTop: 8 }}>
-          Don't Have Account? <Link to="/register">Register</Link>{" "}
-        </Typography>
       </Box>
     </FormContainer>
   );
 };
 
-export default Login;
+export default RegisterScreen;
