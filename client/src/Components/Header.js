@@ -12,9 +12,9 @@ import {
 } from "@material-ui/core";
 import SideNav from "./SideNav";
 import { Link } from "react-router-dom";
-import { Menu, Person, ShoppingCart } from "@material-ui/icons";
+import { Menu, Person, ShoppingCart, Brightness3 } from "@material-ui/icons";
 
-const Header = () => {
+const Header = ({ changeMode }) => {
   const [open, setOpen] = useState(false);
   return (
     <AppBar color="primary" position="relative">
@@ -41,7 +41,9 @@ const Header = () => {
                 <ShoppingCart />
               </Badge>
             </IconButton>
-
+            <IconButton color="inherit" arial-label="mode" onClick={changeMode}>
+              <Brightness3 />
+            </IconButton>
             <Hidden mdDown>
               <Button
                 color="inherit"

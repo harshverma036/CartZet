@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import Ratings from "../Components/Ratings";
 import Data from "../data";
 
 const HomeScreen = () => {
@@ -19,18 +20,22 @@ const HomeScreen = () => {
       </Typography>
       <Grid container spacing={2}>
         {Data.map((product) => (
-          <Grid md={3} item key={product._id}>
-            <Card>
-              <CardActionArea component={Link} to="/login">
+          <Grid md={3} sm={6} item key={product._id}>
+            <Card style={{ height: "100%" }}>
+              <CardActionArea
+                component={Link}
+                to={`/product/${product._id}`}
+                style={{ height: "100%" }}
+              >
                 <CardMedia
                   component="img"
                   alt={product.name}
                   image={product.image}
                   title={product.name}
                 />
-
                 <CardContent>
                   <Typography>{product.name}</Typography>
+                  <Ratings value={product.rating} />
                   <Typography variant="h5">${product.price}</Typography>
                 </CardContent>
               </CardActionArea>
