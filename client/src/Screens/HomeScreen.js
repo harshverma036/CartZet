@@ -9,29 +9,34 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import Data from "../data";
 
 const HomeScreen = () => {
   return (
     <Box mt={2}>
-      <Typography variant="h3">Products</Typography>
+      <Typography variant="h3" style={{ marginBottom: 14 }}>
+        Products
+      </Typography>
       <Grid container spacing={2}>
-        <Grid md={3} item>
-          <Card>
-            <CardActionArea component={Link} to="/login">
-              <CardMedia
-                component="img"
-                alt="image_name"
-                image="/images/airpods.jpg"
-                title="image_name"
-              />
+        {Data.map((product) => (
+          <Grid md={3} item key={product._id}>
+            <Card>
+              <CardActionArea component={Link} to="/login">
+                <CardMedia
+                  component="img"
+                  alt={product.name}
+                  image={product.image}
+                  title={product.name}
+                />
 
-              <CardContent>
-                <Typography>{"PRODUCT NAME"}</Typography>
-                <Typography variant="h5">${"0.00"}</Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Grid>
+                <CardContent>
+                  <Typography>{product.name}</Typography>
+                  <Typography variant="h5">${product.price}</Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     </Box>
   );

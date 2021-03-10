@@ -22,7 +22,7 @@ const SideNav = ({ open, close }) => {
         </ListItem>
         <ListItem button onClick={close} component={Link} to="/login">
           <Person />
-          &nbsp; Sign In
+          &nbsp;Sign In
         </ListItem>
       </List>
     </Drawer>
