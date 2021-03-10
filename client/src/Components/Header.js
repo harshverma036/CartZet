@@ -33,10 +33,22 @@ const Header = ({ changeMode }) => {
             <SideNav open={open} close={() => setOpen(!open)} />
           </Hidden>
 
-          <Typography variant="h5">{"CartZet"}</Typography>
+          <Typography
+            variant="h5"
+            component={Link}
+            to="/"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            {"CartZet"}
+          </Typography>
 
           <Box ml="auto">
-            <IconButton color="inherit" aria-label="cart">
+            <IconButton
+              color="inherit"
+              aria-label="cart"
+              component={Link}
+              to="/cart"
+            >
               <Badge badgeContent={2} color="secondary">
                 <ShoppingCart />
               </Badge>

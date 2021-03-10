@@ -12,7 +12,6 @@ import {
   FormControl,
   InputLabel,
 } from "@material-ui/core";
-import { grey } from "@material-ui/core/colors";
 import data from "../data";
 import { Link } from "react-router-dom";
 
@@ -67,7 +66,6 @@ const ProductScreen = ({ match }) => {
             <ListItem
               style={{
                 fontSize: "1.1rem",
-                color: grey[600],
                 textAlign: "justify",
               }}
             >

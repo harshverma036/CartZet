@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import FormContainer from "../Components/FormCotainer";
 import { TextField, Button, Box, Typography } from "@material-ui/core";
+import { teal } from "@material-ui/core/colors";
 import { Link } from "react-router-dom";
 
 const Login = () => {
@@ -50,7 +51,10 @@ const Login = () => {
           Login
         </Button>
         <Typography style={{ marginTop: 8 }}>
-          Don't Have Account? <Link to="/register">Register</Link>{" "}
+          Don't Have Account?{" "}
+          <Link to="/register" style={{ color: teal[500] }}>
+            Register
+          </Link>{" "}
         </Typography>
       </Box>
     </FormContainer>
