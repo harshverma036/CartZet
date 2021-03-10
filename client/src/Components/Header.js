@@ -16,7 +16,7 @@ import { Menu, Person, ShoppingCart } from "@material-ui/icons";
 const Header = () => {
   const [open, setOpen] = useState(false);
   return (
-    <AppBar color="primary">
+    <AppBar color="primary" position="relative">
       <Container maxWidth="lg">
         <Toolbar>
           <Hidden lgUp>
