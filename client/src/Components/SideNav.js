@@ -2,6 +2,7 @@ import React from "react";
 import { Drawer, List, ListItem, Typography } from "@material-ui/core";
 import { Person } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   appDrawer: {
@@ -19,7 +20,7 @@ const SideNav = ({ open, close }) => {
         <ListItem component={Typography} variant="h4">
           CartZet
         </ListItem>
-        <ListItem button onClick={close}>
+        <ListItem button onClick={close} component={Link} to="/login">
           <Person />
           &nbsp; Sign In
         </ListItem>
