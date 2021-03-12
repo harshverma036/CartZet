@@ -3,6 +3,8 @@ import { Container, CssBaseline } from "@material-ui/core";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core";
 import { pink, teal } from "@material-ui/core/colors";
+import { Provider } from "react-redux";
+import store from "./store";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import HomeScreen from "./Screens/HomeScreen";
@@ -26,20 +28,22 @@ function App() {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Header changeMode={() => setDarkMode(!darkMode)} />
-        <Container maxWidth="lg">
-          <Route path="/cart" component={CartScreen} />
-          <Route path="/product/:id" component={ProductScreen} />
-          <Route path="/register" component={RegisterScreen} />
-          <Route path="/login" component={LoginScreen} />
-          <Route path="/" component={HomeScreen} exact />
-        </Container>
-        <Footer />
-      </Router>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Header changeMode={() => setDarkMode(!darkMode)} />
+          <Container maxWidth="lg">
+            <Route path="/cart" component={CartScreen} />
+            <Route path="/product/:id" component={ProductScreen} />
+            <Route path="/register" component={RegisterScreen} />
+            <Route path="/login" component={LoginScreen} />
+            <Route path="/" component={HomeScreen} exact />
+          </Container>
+          <Footer />
+        </Router>
+      </ThemeProvider>
+    </Provider>
   );
 }
 

@@ -8,7 +8,7 @@
     "start": "npm server/index",
     "server": "nodemon server/index",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm eun server\" \"npm run client\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "import:data": "node server/seed",
     "destroy:data": "node server/seed -d"
   },
@@ -23,5 +23,9 @@
     "express-async-handler": "^1.1.4",
     "mongoose": "^5.11.19",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.0",
+    "nodemon": "^2.0.7"
   }
 }
