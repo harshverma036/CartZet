@@ -5,13 +5,21 @@ import {
   productsListReducer,
   productDetailsReducer,
 } from "./reducers/productReducers";
+import { userLoginReducer } from "./reducers/userReducers";
 
 const reducer = combineReducers({
   productsList: productsListReducer,
   productDetails: productDetailsReducer,
+  userLogin: userLoginReducer,
 });
 
-const initialState = {};
+const userInfoFromStorage = localStorage.getItem("userInfo")
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : {};
+
+const initialState = {
+  userLogin: { userInfo: userInfoFromStorage },
+};
 
 const middlewares = [thunk];
 

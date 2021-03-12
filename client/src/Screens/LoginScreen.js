@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormContainer from "../Components/FormCotainer";
 import {
   TextField,
@@ -9,18 +9,34 @@ import {
 } from "@material-ui/core";
 import { teal } from "@material-ui/core/colors";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../actions/userActions";
 
-const Login = () => {
+const Login = ({ history }) => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, userInfo, error } = userLogin;
+
+  useEffect(() => {
+    if (userInfo && userInfo.name) {
+      history.push("/");
+    } else {
+      history.push("/login");
+    }
+  }, [userInfo, history, dispatch]);
+
   const submitHandler = (e) => {
     e.preventDefault();
+    dispatch(loginUser({ email, password }));
   };
 
   return (
     <FormContainer>
       <Typography variant="h3">Sign In</Typography>
+      <p>{error && error}</p>
       <Box component="form" mt={1} onSubmit={submitHandler}>
         <TextField
           placeholder="Enter email"
@@ -53,8 +69,9 @@ const Login = () => {
           fullWidth
           size="large"
           style={{ marginTop: 10 }}
+          disabled={loading}
         >
-          <CircularProgress color="inherit" size={20} />
+          {loading && <CircularProgress color="inherit" size={20} />}
           &nbsp;&nbsp; Login
         </Button>
         <Typography style={{ marginTop: 8 }}>

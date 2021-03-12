@@ -8,7 +8,7 @@ import store from "./store";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import HomeScreen from "./Screens/HomeScreen";
-import LoginScreen from "./Screens/Login";
+import LoginScreen from "./Screens/LoginScreen";
 import RegisterScreen from "./Screens/RegisterScreen";
 import ProductScreen from "./Screens/ProductScreen";
 import CartScreen from "./Screens/CartScreen";
