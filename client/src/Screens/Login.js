@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import FormContainer from "../Components/FormCotainer";
-import { TextField, Button, Box, Typography } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  CircularProgress,
+} from "@material-ui/core";
 import { teal } from "@material-ui/core/colors";
 import { Link } from "react-router-dom";
 
@@ -48,7 +54,8 @@ const Login = () => {
           size="large"
           style={{ marginTop: 10 }}
         >
-          Login
+          <CircularProgress color="inherit" size={20} />
+          &nbsp;&nbsp; Login
         </Button>
         <Typography style={{ marginTop: 8 }}>
           Don't Have Account?{" "}

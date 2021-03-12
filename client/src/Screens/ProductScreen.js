@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -12,20 +12,32 @@ import {
   FormControl,
   InputLabel,
 } from "@material-ui/core";
-import data from "../data";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../Components/Loader";
+import { getProductDetails } from "../actions/productActions";
 import { Link } from "react-router-dom";
 
 const ProductScreen = ({ match }) => {
+  const dispatch = useDispatch();
   const [qty, setQty] = useState(1);
   const productId = match.params.id;
 
-  const product = data.find((p) => p._id == productId);
+  const productDetails = useSelector((state) => state.productDetails);
+  const { loading, product, error } = productDetails;
+
+  useEffect(() => {
+    dispatch(getProductDetails(productId));
+  }, [dispatch]);
 
   const addToCartHandler = () => {
     console.log("Clicked");
   };
 
-  return (
+  return loading ? (
+    <Loader />
+  ) : error ? (
+    <p>{error}</p>
+  ) : (
     <Box mt={3}>
       <Button
         style={{ marginBottom: 20 }}
