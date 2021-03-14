@@ -8,6 +8,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { teal } from "@material-ui/core/colors";
+import { Alert } from "@material-ui/lab";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../actions/userActions";
@@ -26,7 +27,7 @@ const Login = ({ history }) => {
     } else {
       history.push("/login");
     }
-  }, [userInfo, history, dispatch]);
+  }, [userInfo, history]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -36,7 +37,11 @@ const Login = ({ history }) => {
   return (
     <FormContainer>
       <Typography variant="h3">Sign In</Typography>
-      <p>{error && error}</p>
+      {error && (
+        <Alert style={{ marginTop: 12 }} severity="error">
+          {error}
+        </Alert>
+      )}
       <Box component="form" mt={1} onSubmit={submitHandler}>
         <TextField
           placeholder="Enter email"

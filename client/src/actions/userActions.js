@@ -4,6 +4,7 @@ import {
   USER_LOGIN_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_RESET,
+  USER_LOGOUT_SUCCESS,
 } from "../constants/userContstants";
 
 export const loginUser = (user) => async (dispatch) => {
@@ -28,6 +29,10 @@ export const loginUser = (user) => async (dispatch) => {
           ? error.response.data.message
           : error.message,
     });
-    dispatch({ type: USER_LOGIN_RESET });
   }
+};
+
+export const logoutUser = () => async (dispatch) => {
+  localStorage.removeItem("userInfo");
+  dispatch({ type: USER_LOGOUT_SUCCESS });
 };

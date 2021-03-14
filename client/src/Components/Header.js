@@ -22,6 +22,7 @@ import {
   Brightness3,
   MoreVert,
 } from "@material-ui/icons";
+import { logoutUser } from "../actions/userActions";
 
 const Header = ({ changeMode }) => {
   const dispatch = useDispatch();
@@ -31,6 +32,11 @@ const Header = ({ changeMode }) => {
 
   const openProfileMenu = (e) => setProfileMenuAnchorEl(e.currentTarget);
   const closeProfileMenu = () => setProfileMenuAnchorEl(null);
+
+  const logoutHandler = () => {
+    dispatch(logoutUser());
+    closeProfileMenu();
+  };
 
   const [open, setOpen] = useState(false);
 
@@ -43,13 +49,12 @@ const Header = ({ changeMode }) => {
       id="profile-menu"
       keepMounted
       open={isProfileMenuOpen}
+      onClose={closeProfileMenu}
     >
       <MenuItem component={Link} onClick={closeProfileMenu} to="/profile">
         My Profile
       </MenuItem>
-      <MenuItem component={Link} onClick={closeProfileMenu} to="/logout">
-        Logout
-      </MenuItem>
+      <MenuItem onClick={logoutHandler}>Logout</MenuItem>
     </Menu>
   );
 
@@ -98,7 +103,7 @@ const Header = ({ changeMode }) => {
               >
                 <Brightness3 />
               </IconButton>
-              {!userInfo._id && (
+              {!userInfo && (
                 <Hidden mdDown>
                   <Button
                     color="inherit"
@@ -112,8 +117,8 @@ const Header = ({ changeMode }) => {
                   </Button>
                 </Hidden>
               )}
-              <Hidden mdDown>
-                {userInfo._id && (
+              {userInfo && (
+                <Hidden mdDown>
                   <Button
                     color="inherit"
                     size="large"
@@ -123,10 +128,10 @@ const Header = ({ changeMode }) => {
                     <Person />
                     &nbsp; {userInfo.name.split(" ")[0]}
                   </Button>
-                )}
-              </Hidden>
+                </Hidden>
+              )}
 
-              {userInfo._id && (
+              {userInfo && (
                 <Hidden lgUp>
                   <IconButton color="inherit" onClick={openProfileMenu}>
                     <MoreVert />
