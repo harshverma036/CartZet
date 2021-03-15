@@ -19,10 +19,10 @@ function App() {
     palette: {
       type: darkMode ? "dark" : "light",
       primary: {
-        main: teal[500],
+        main: pink[700],
       },
       secondary: {
-        main: pink[500],
+        main: teal[500],
       },
     },
   });
