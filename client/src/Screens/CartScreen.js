@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import {
   Box,
   Grid,
@@ -17,11 +17,28 @@ import {
   FormControl,
   InputLabel,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart, removeFromCart } from "../actions/cartActions";
 import { Delete } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 
-const CartScreen = () => {
-  const [qty, setQty] = useState(1);
+const CartScreen = ({ location, match }) => {
+  const dispatch = useDispatch();
+  const productId = match.params.id;
+  const qty = location.search ? Number(location.search.split("=")[1]) : 1;
+
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+
+  const removeFromCartHandler = (id) => dispatch(removeFromCart(id));
+
+  useEffect(() => {
+    if (productId) {
+      dispatch(addToCart(productId, qty));
+    }
+  }, [dispatch, productId, qty]);
+
   return (
     <Box mt={3}>
       <Button variant="outlined" color="default" component={Link} to="/">
@@ -33,29 +50,45 @@ const CartScreen = () => {
       <Grid container>
         <Grid item lg={9} md={8} xs={12}>
           <List>
-            <ListItem button>
-              <ListItemAvatar>
-                <Avatar>CI</Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="ITEM NAME" secondary="ITEM BRAND, CAT" />
-              <ListItemSecondaryAction>
-                <FormControl variant="outlined" style={{ marginRight: 18 }}>
-                  <InputLabel id="qty">Qunatity</InputLabel>
-                  <Select
-                    labelId="qty"
-                    value={qty}
-                    onChange={(e) => setQty(e.target.value)}
-                    id="qty"
-                    label="Qunatity"
-                  >
-                    <MenuItem value={1}>1</MenuItem>
-                  </Select>
-                </FormControl>
-                <IconButton edge="end">
-                  <Delete />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
+            {cartItems.length === 0 && (
+              <Alert severity="info">{"Cart is empty."}</Alert>
+            )}
+            {cartItems.map((item) => (
+              <Fragment key={item._id}>
+                <ListItem button component={Link} to={`/product/${item._id}`}>
+                  <ListItemAvatar>
+                    <Avatar alt={item.name} src={item.image} />
+                  </ListItemAvatar>
+                  <ListItemText primary={item.name} secondary={item.brand} />
+                  <ListItemSecondaryAction>
+                    <FormControl variant="outlined" style={{ marginRight: 18 }}>
+                      <InputLabel id="qty">Qunatity</InputLabel>
+                      <Select
+                        labelId="qty"
+                        value={item.qty}
+                        onChange={(e) =>
+                          dispatch(addToCart(item._id, Number(e.target.value)))
+                        }
+                        id="qty"
+                        label="Qunatity"
+                      >
+                        {[...Array(item.countInStock).keys()].map((q) => (
+                          <MenuItem value={q + 1} key={q + 1}>
+                            {q + 1}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    <IconButton
+                      edge="end"
+                      onClick={() => removeFromCartHandler(item._id)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </Fragment>
+            ))}
           </List>
         </Grid>
         <Grid item lg={3} md={4} xs={12}>
@@ -65,10 +98,13 @@ const CartScreen = () => {
             </ListItem>
             <Divider />
             <ListItem component={Typography} variant="h6">
-              Total Items: {"0"}
+              Total Items: {cartItems.reduce((acc, i) => acc + i.qty, 0)}
             </ListItem>
             <ListItem component={Typography} variant="h6">
-              Total Price: {"0.00"}
+              Total Price:{" "}
+              {cartItems
+                .reduce((acc, i) => acc + i.qty * i.price, 0)
+                .toFixed(2)}
             </ListItem>
             <ListItem>
               <Button
@@ -76,6 +112,7 @@ const CartScreen = () => {
                 size="large"
                 color="primary"
                 variant="contained"
+                disabled={cartItems.length === 0}
               >
                 Proceed to checkout
               </Button>

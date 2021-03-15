@@ -33,6 +33,9 @@ const Header = ({ changeMode }) => {
   const openProfileMenu = (e) => setProfileMenuAnchorEl(e.currentTarget);
   const closeProfileMenu = () => setProfileMenuAnchorEl(null);
 
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+
   const logoutHandler = () => {
     dispatch(logoutUser());
     closeProfileMenu();
@@ -92,7 +95,10 @@ const Header = ({ changeMode }) => {
                 component={Link}
                 to="/cart"
               >
-                <Badge badgeContent={2} color="secondary">
+                <Badge
+                  badgeContent={cartItems.length > 0 ? cartItems.length : "0"}
+                  color="secondary"
+                >
                   <ShoppingCart />
                 </Badge>
               </IconButton>

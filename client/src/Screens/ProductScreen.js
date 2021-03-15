@@ -17,7 +17,7 @@ import Loader from "../Components/Loader";
 import { getProductDetails } from "../actions/productActions";
 import { Link } from "react-router-dom";
 
-const ProductScreen = ({ match }) => {
+const ProductScreen = ({ history, match }) => {
   const dispatch = useDispatch();
   const [qty, setQty] = useState(1);
   const productId = match.params.id;
@@ -30,7 +30,7 @@ const ProductScreen = ({ match }) => {
   }, [dispatch]);
 
   const addToCartHandler = () => {
-    console.log("Clicked");
+    history.push(`/cart/${productId}?qty=${qty}`);
   };
 
   return loading ? (

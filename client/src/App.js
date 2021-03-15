@@ -34,7 +34,7 @@ function App() {
         <Router>
           <Header changeMode={() => setDarkMode(!darkMode)} />
           <Container maxWidth="lg">
-            <Route path="/cart" component={CartScreen} />
+            <Route path="/cart/:id?" component={CartScreen} />
             <Route path="/product/:id" component={ProductScreen} />
             <Route path="/register" component={RegisterScreen} />
             <Route path="/login" component={LoginScreen} />
