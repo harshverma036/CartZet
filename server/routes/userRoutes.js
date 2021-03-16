@@ -7,7 +7,7 @@ import {
 } from "../controller/userController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
-router.route("/:id").get(protect, getUserById);
+router.route("/profile").get(protect, getUserById);
 router.route("/login").post(userLogin);
 router.route("/register").post(registerUser);
 
