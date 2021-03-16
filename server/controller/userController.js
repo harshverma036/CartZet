@@ -58,3 +58,19 @@ export const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Error occured");
   }
 });
+
+// DESC => Get user by id
+// ROUTE => GET /api/users/:id
+// ACCESS => Private
+export const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+  }
+});
