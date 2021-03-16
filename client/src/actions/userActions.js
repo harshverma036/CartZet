@@ -10,6 +10,7 @@ import {
   USER_PROFILE_DETAILS_REQUEST,
   USER_PROFILE_DETAILS_SUCCESS,
   USER_PROFILE_DETAILS_FAIL,
+  USER_PROFILE_DETAILS_RESET,
 } from "../constants/userContstants";
 
 export const loginUser = (user) => async (dispatch) => {
@@ -64,6 +65,7 @@ export const registerUser = (user) => async (dispatch) => {
 export const logoutUser = () => async (dispatch) => {
   localStorage.removeItem("userInfo");
   dispatch({ type: USER_LOGOUT_SUCCESS });
+  dispatch({ type: USER_PROFILE_DETAILS_RESET });
 };
 
 export const getUserDetails = () => async (dispatch, getState) => {

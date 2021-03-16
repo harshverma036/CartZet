@@ -49,13 +49,13 @@ export const userProfileDetailsReducer = (
 ) => {
   switch (action.type) {
     case USER_PROFILE_DETAILS_REQUEST:
-      return { loading: true };
+      return { ...state, loading: true };
     case USER_PROFILE_DETAILS_SUCCESS:
       return { loading: false, userDetails: action.payload };
     case USER_PROFILE_DETAILS_FAIL:
       return { loading: false, error: action.payload };
     case USER_PROFILE_DETAILS_RESET:
-      return {};
+      return { userDetails: {} };
     default:
       return state;
   }

@@ -22,6 +22,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 import { Delete } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import Steps from "../Components/Steps";
 
 const CartScreen = ({ location, match }) => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const CartScreen = ({ location, match }) => {
 
   return (
     <Box mt={3}>
+      <Steps step1 step2 step3 step4 />
       <Button variant="outlined" color="default" component={Link} to="/">
         Go Back
       </Button>
