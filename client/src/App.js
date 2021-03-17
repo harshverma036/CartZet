@@ -13,6 +13,7 @@ import RegisterScreen from "./Screens/RegisterScreen";
 import ProductScreen from "./Screens/ProductScreen";
 import CartScreen from "./Screens/CartScreen";
 import ProfileScreen from "./Screens/ProfileScreen";
+import ShippingScreen from "./Screens/ShippingScreen";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -35,6 +36,7 @@ function App() {
         <Router>
           <Header changeMode={() => setDarkMode(!darkMode)} />
           <Container maxWidth="lg">
+            <Route path="/shipping" component={ShippingScreen} />
             <Route path="/profile" component={ProfileScreen} />
             <Route path="/cart/:id?" component={CartScreen} />
             <Route path="/product/:id" component={ProductScreen} />

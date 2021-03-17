@@ -4,26 +4,18 @@ import { Stepper, Step, StepButton } from "@material-ui/core";
 const Steps = ({ step1, step2, step3, step4 }) => {
   return (
     <Stepper alternativeLabel nonLinear style={{ backgroundColor: "inherit" }}>
-      {step1 && (
-        <Step active>
-          <StepButton>{"Login"}</StepButton>
-        </Step>
-      )}
-      {step2 && (
-        <Step active>
-          <StepButton>{"Shipping"}</StepButton>
-        </Step>
-      )}
-      {step3 && (
-        <Step active>
-          <StepButton>{"Payment"}</StepButton>
-        </Step>
-      )}
-      {step4 && (
-        <Step active>
-          <StepButton>{"Order"}</StepButton>
-        </Step>
-      )}
+      <Step active={step1} disabled={!step1}>
+        <StepButton>{"Login"}</StepButton>
+      </Step>
+      <Step active={step2} disabled={!step2}>
+        <StepButton>{"Shipping"}</StepButton>
+      </Step>
+      <Step active={step3} disabled={!step3}>
+        <StepButton>{"Payment"}</StepButton>
+      </Step>
+      <Step active={step4} disabled={!step4}>
+        <StepButton>{"Order"}</StepButton>
+      </Step>
     </Stepper>
   );
 };

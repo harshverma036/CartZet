@@ -1,4 +1,9 @@
-import { ADD_CART_ITEM, REMOVE_CART_ITEM } from "../constants/cartConstants";
+import {
+  ADD_CART_ITEM,
+  ADD_SHIPPING_ADDRESS_REQUEST,
+  ADD_SHIPPING_ADDRESS_SUCCESS,
+  REMOVE_CART_ITEM,
+} from "../constants/cartConstants";
 
 export const cartReducer = (
   state = { cartItems: [], shippingAddress: {} },
@@ -28,6 +33,10 @@ export const cartReducer = (
         ...state,
         cartItems: state.cartItems.filter((x) => x._id !== action.payload),
       };
+    case ADD_SHIPPING_ADDRESS_REQUEST:
+      return { ...state, loading: true };
+    case ADD_SHIPPING_ADDRESS_SUCCESS:
+      return { ...state, loading: false, shippingAddress: action.payload };
     default:
       return state;
   }
