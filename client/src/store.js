@@ -11,6 +11,7 @@ import {
   userRegisterReducer,
   userProfileDetailsReducer,
 } from "./reducers/userReducers";
+import { paymentMethodReducer } from "./reducers/orderReducers";
 
 const reducer = combineReducers({
   productsList: productsListReducer,
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   userProfileDetails: userProfileDetailsReducer,
+  paymentMethod: paymentMethodReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
