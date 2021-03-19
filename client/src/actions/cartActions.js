@@ -4,6 +4,7 @@ import {
   ADD_SHIPPING_ADDRESS_REQUEST,
   ADD_SHIPPING_ADDRESS_SUCCESS,
   REMOVE_CART_ITEM,
+  ADD_PAYMENT_METHOD_SUCCESS,
 } from "../constants/cartConstants";
 
 export const addToCart = (id, qty) => async (dispatch, getState) => {
@@ -37,4 +38,10 @@ export const addShippingAddress = (data) => async (dispatch) => {
   dispatch({ type: ADD_SHIPPING_ADDRESS_SUCCESS, payload: data });
 
   localStorage.setItem("shippingAddress", JSON.stringify(data));
+};
+
+export const addPaymentMethod = (data) => async (dispatch) => {
+  dispatch({ type: ADD_PAYMENT_METHOD_SUCCESS, payload: data });
+
+  localStorage.setItem("paymentMethod", data);
 };

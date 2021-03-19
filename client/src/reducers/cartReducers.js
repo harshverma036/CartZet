@@ -3,10 +3,11 @@ import {
   ADD_SHIPPING_ADDRESS_REQUEST,
   ADD_SHIPPING_ADDRESS_SUCCESS,
   REMOVE_CART_ITEM,
+  ADD_PAYMENT_METHOD_SUCCESS,
 } from "../constants/cartConstants";
 
 export const cartReducer = (
-  state = { cartItems: [], shippingAddress: {} },
+  state = { cartItems: [], shippingAddress: {}, payment: "" },
   action
 ) => {
   switch (action.type) {
@@ -37,6 +38,8 @@ export const cartReducer = (
       return { ...state, loading: true };
     case ADD_SHIPPING_ADDRESS_SUCCESS:
       return { ...state, loading: false, shippingAddress: action.payload };
+    case ADD_PAYMENT_METHOD_SUCCESS:
+      return { ...state, loading: false, payment: action.payload };
     default:
       return state;
   }

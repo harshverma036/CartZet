@@ -9,7 +9,8 @@ import {
 } from "@material-ui/core";
 import Steps from "../Components/Steps";
 import { useDispatch, useSelector } from "react-redux";
-import { addPaymentMethod } from "../actions/orderActions";
+import { addPaymentMethod } from "../actions/cartActions";
+import { Link } from "react-router-dom";
 
 const ShppingScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -22,8 +23,12 @@ const ShppingScreen = ({ history }) => {
   const { shippingAddress } = cart;
 
   useEffect(() => {
-    if (!userInfo || !shippingAddress.address) {
+    if (!userInfo) {
       history.push("/login");
+    } else {
+      if (!shippingAddress.address) {
+        history.push("/shipping");
+      }
     }
   }, [userInfo, history, shippingAddress]);
 
@@ -40,7 +45,7 @@ const ShppingScreen = ({ history }) => {
       <Box component="form" mt={1} onSubmit={submitHandler}>
         <FormControlLabel
           value={payment}
-          control={<Radio />}
+          control={<Radio checked />}
           label={"PayPal"}
           checked
         />
