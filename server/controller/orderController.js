@@ -13,7 +13,7 @@ export const addNewOrder = asyncHandler(async (req, res) => {
     shippingPrice,
     shippingAddress,
     paymentMethod,
-    itemPrice,
+    itemsPrice,
   } = req.body;
 
   if (orderItems && orderItems.length === 0) {
@@ -28,7 +28,7 @@ export const addNewOrder = asyncHandler(async (req, res) => {
       shippingPrice,
       shippingAddress,
       paymentMethod,
-      itemPrice,
+      itemsPrice,
     });
 
     const order = await newOrder.save();

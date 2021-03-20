@@ -54,8 +54,12 @@ const CartScreen = ({ location, match }) => {
               <Alert severity="info">{"Cart is empty."}</Alert>
             )}
             {cartItems.map((item) => (
-              <Fragment key={item._id}>
-                <ListItem button component={Link} to={`/product/${item._id}`}>
+              <Fragment key={item.product}>
+                <ListItem
+                  button
+                  component={Link}
+                  to={`/product/${item.product}`}
+                >
                   <ListItemAvatar>
                     <Avatar alt={item.name} src={item.image} />
                   </ListItemAvatar>
@@ -67,7 +71,9 @@ const CartScreen = ({ location, match }) => {
                         labelId="qty"
                         value={item.qty}
                         onChange={(e) =>
-                          dispatch(addToCart(item._id, Number(e.target.value)))
+                          dispatch(
+                            addToCart(item.product, Number(e.target.value))
+                          )
                         }
                         id="qty"
                         label="Qunatity"

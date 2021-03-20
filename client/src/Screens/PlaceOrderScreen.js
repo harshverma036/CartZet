@@ -1,6 +1,5 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import {
-  Container,
   Grid,
   Box,
   Typography,
@@ -12,14 +11,22 @@ import {
   Avatar,
   ListItemSecondaryAction,
   Button,
+  CircularProgress,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { grey } from "@material-ui/core/colors";
 import Steps from "../Components/Steps";
 import { useDispatch, useSelector } from "react-redux";
+import { placeOrder } from "../actions/orderActions";
 
-const PlaceOrderScreen = () => {
+const PlaceOrderScreen = ({ history }) => {
+  const dispatch = useDispatch();
+
   const cart = useSelector((state) => state.cart);
   const { cartItems, shippingAddress, payment } = cart;
+
+  const placeNewOrder = useSelector((state) => state.placeNewOrder);
+  const { loading, newOrder, error } = placeNewOrder;
 
   cart.itemsPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
   cart.shippingPrice = cart.itemsPrice > 999 ? 0 : 99;
@@ -29,6 +36,26 @@ const PlaceOrderScreen = () => {
     Number(cart.shippingPrice) +
     Number(cart.taxPrice)
   ).toFixed(2);
+
+  useEffect(() => {
+    if (newOrder) {
+      history.push(`/order/${newOrder._id}`);
+    }
+  }, [newOrder, history]);
+
+  const placeOrderHandler = () => {
+    dispatch(
+      placeOrder({
+        orderItems: cartItems,
+        shippingAddress,
+        paymentMethod: payment,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        taxPrice: cart.taxPrice,
+        totalPrice: cart.totalPrice,
+      })
+    );
+  };
 
   return (
     <Box mt={5}>
@@ -127,8 +154,21 @@ const PlaceOrderScreen = () => {
               </ListItemSecondaryAction>
             </ListItem>
 
-            <ListItem>
-              <Button variant="contained" color="primary" fullWidth>
+            <ListItem component={Box} display="flex" flexDirection="column">
+              {error && (
+                <Alert severity="error" style={{ marginBottom: 12 }}>
+                  {error}
+                </Alert>
+              )}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={placeOrderHandler}
+                fullWidth
+                disabled={loading}
+              >
+                {loading && <CircularProgress color="inherit" size={20} />}
+                &nbsp; &nbsp;
                 {"Place Order"}
               </Button>
             </ListItem>

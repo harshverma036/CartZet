@@ -12,7 +12,7 @@ export const placeNewOrderReducer = (
     case PLACE_NEW_ORDER_REQUEST:
       return { loading: true };
     case PLACE_NEW_ORDER_SUCCESS:
-      return { loading: false, placedOrder: action.payload };
+      return { loading: false, newOrder: action.payload };
     case PLACE_NEW_ORDER_FAIL:
       return { loading: false, error: action.payload };
     default:
