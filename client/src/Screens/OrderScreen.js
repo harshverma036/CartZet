@@ -13,61 +13,66 @@ import {
   Button,
   CircularProgress,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { Alert } from "@material-ui/lab";
 import { grey } from "@material-ui/core/colors";
-import Steps from "../Components/Steps";
+import Loader from "../Components/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { placeOrder } from "../actions/orderActions";
+import { getOrderDetails } from "../actions/orderActions";
 
-const OrderScreen = ({ history }) => {
+const OrderScreen = ({ history, match }) => {
+  const productId = match.params.id;
   const dispatch = useDispatch();
 
-  const cart = useSelector((state) => state.cart);
-  const { cartItems, shippingAddress, payment } = cart;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
-  const placeNewOrder = useSelector((state) => state.placeNewOrder);
-  const { loading, newOrder, error } = placeNewOrder;
-
-  cart.itemsPrice = cartItems.reduce((acc, item) => acc + item.price, 0);
-  cart.shippingPrice = cart.itemsPrice > 999 ? 0 : 99;
-  cart.taxPrice = (cart.itemsPrice * 0.18).toFixed(2);
-  cart.totalPrice = (
-    Number(cart.itemsPrice) +
-    Number(cart.shippingPrice) +
-    Number(cart.taxPrice)
-  ).toFixed(2);
+  const orderDetails = useSelector((state) => state.orderDetails);
+  const { loading, order, error } = orderDetails;
 
   useEffect(() => {
-    if (newOrder) {
-      history.push(`/order/${newOrder._id}`);
+    if (!userInfo) {
+      history.push("/login");
+    } else {
+      dispatch(getOrderDetails(productId));
     }
-  }, [newOrder, history]);
+  }, [userInfo, history, dispatch, productId]);
 
-  const placeOrderHandler = () => {
-    dispatch(
-      placeOrder({
-        orderItems: cartItems,
-        shippingAddress,
-        paymentMethod: payment,
-        itemsPrice: cart.itemsPrice,
-        shippingPrice: cart.shippingPrice,
-        taxPrice: cart.taxPrice,
-        totalPrice: cart.totalPrice,
-      })
-    );
-  };
-
-  return (
+  return loading ? (
+    <Loader />
+  ) : error ? (
+    <Alert severity="error">{error}</Alert>
+  ) : (
     <Box mt={5}>
       <Grid container justify="center">
-        <Grid item xs={12}>
-          <Steps step1 step2 step3 step4 />
-        </Grid>
-        <Grid item lg={6} md={7} xs={12}>
+        <Grid item md={7} xs={12}>
           <Typography variant="h4" style={{ marginBottom: 26 }}>
-            Place Order
+            ORDER ID {order._id}
           </Typography>
           <Grid container>
+            <Grid
+              component={Box}
+              display="flex"
+              flexDirection="column"
+              item
+              xs={12}
+            >
+              <Typography variant="h6">Customer</Typography>
+              <Typography
+                paragraph
+                style={{ color: grey[600], marginBottom: 0 }}
+              >
+                Name: {order.user.name}
+              </Typography>
+              <Typography
+                component="a"
+                paragraph
+                href={`mailto:${order.user.email}`}
+                style={{ color: grey[700], paddingTop: 0 }}
+              >
+                Email: {order.user.email}
+              </Typography>
+            </Grid>
             <Grid
               component={Box}
               display="flex"
@@ -78,8 +83,14 @@ const OrderScreen = ({ history }) => {
               <Typography variant="h6">Shipping</Typography>
               <Typography paragraph style={{ color: grey[600] }}>
                 Address:{" "}
-                {`${shippingAddress.address}, ${shippingAddress.city} Pin: ${shippingAddress.pin}, ${shippingAddress.country}`}
+                {`${order.shippingAddress.address}, ${order.shippingAddress.city} Pin: ${order.shippingAddress.pin}, ${order.shippingAddress.country}`}
               </Typography>
+              <Alert
+                style={{ marginBottom: 12 }}
+                severity={order.isDelivered ? "success" : "error"}
+              >
+                {order.isDelivered ? order.deliveredAt : "Not delivered yet"}
+              </Alert>
             </Grid>
             <Divider />
             <Grid
@@ -91,8 +102,14 @@ const OrderScreen = ({ history }) => {
             >
               <Typography variant="h6">Payment Method</Typography>
               <Typography paragraph style={{ color: grey[600] }}>
-                Method: {payment}
+                Method: {order.paymentMethod}
               </Typography>
+              <Alert
+                style={{ marginBottom: 12 }}
+                severity={order.isPaid ? "success" : "error"}
+              >
+                {order.isPaid ? order.paidAt : "Not paid yet"}
+              </Alert>
             </Grid>
             <Divider />
             <Grid
@@ -104,9 +121,13 @@ const OrderScreen = ({ history }) => {
             >
               <Typography variant="h5">Order Items</Typography>
               <List>
-                {cartItems.map((item) => (
+                {order.orderItems.map((item) => (
                   <Fragment key={item._id}>
-                    <ListItem button>
+                    <ListItem
+                      button
+                      component={Link}
+                      to={`/product/${item.product}`}
+                    >
                       <ListItemAvatar>
                         <Avatar alt={item.name} src={item.image} />
                       </ListItemAvatar>
@@ -121,7 +142,7 @@ const OrderScreen = ({ history }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item lg={3} md={3} xs={12}>
+        <Grid item md={3} xs={12}>
           <Typography style={{ marginLeft: 11 }} variant="h4">
             Order
           </Typography>
@@ -129,48 +150,49 @@ const OrderScreen = ({ history }) => {
             <ListItem>
               <ListItemText>{"Item(s) Price:"}</ListItemText>
               <ListItemSecondaryAction>
-                Rs.{cart.itemsPrice}
+                Rs.{order.itemsPrice}
               </ListItemSecondaryAction>
             </ListItem>
 
             <ListItem>
               <ListItemText>{"Tax Price:"}</ListItemText>
               <ListItemSecondaryAction>
-                Rs.{cart.taxPrice}
+                Rs.{order.taxPrice}
               </ListItemSecondaryAction>
             </ListItem>
 
             <ListItem>
               <ListItemText>{"Shipping Price:"}</ListItemText>
               <ListItemSecondaryAction>
-                Rs.{cart.shippingPrice}
+                Rs.{order.shippingPrice}
               </ListItemSecondaryAction>
             </ListItem>
 
             <ListItem>
               <ListItemText>{"Total Price:"}</ListItemText>
               <ListItemSecondaryAction>
-                Rs.{cart.totalPrice}
+                Rs.{order.totalPrice}
               </ListItemSecondaryAction>
             </ListItem>
 
             <ListItem component={Box} display="flex" flexDirection="column">
-              {error && (
+              {/* {error && (
                 <Alert severity="error" style={{ marginBottom: 12 }}>
                   {error}
                 </Alert>
+              )} */}
+              {userInfo.isAdmin && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  // disabled={loading}
+                >
+                  {/* {loading && <CircularProgress color="inherit" size={20} />} */}
+                  &nbsp; &nbsp;
+                  {"Mark As Delivered"}
+                </Button>
               )}
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={placeOrderHandler}
-                fullWidth
-                disabled={loading}
-              >
-                {loading && <CircularProgress color="inherit" size={20} />}
-                &nbsp; &nbsp;
-                {"Place Order"}
-              </Button>
             </ListItem>
           </List>
         </Grid>
