@@ -6,6 +6,9 @@ import {
   PLACE_NEW_ORDER_FAIL,
   PLACE_NEW_ORDER_REQUEST,
   PLACE_NEW_ORDER_SUCCESS,
+  UPDATE_DELIVERY_FAIL,
+  UPDATE_DELIVERY_REQUEST,
+  UPDATE_DELIVERY_SUCCESS,
 } from "../constants/orderConstants";
 
 export const placeOrder = (order) => async (dispatch, getState) => {
@@ -57,6 +60,35 @@ export const getOrderDetails = (productId) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: ORDER_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateDelivery = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: UPDATE_DELIVERY_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    await axios.put(`/api/orders/${id}`, {}, config);
+
+    dispatch({ type: UPDATE_DELIVERY_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_DELIVERY_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

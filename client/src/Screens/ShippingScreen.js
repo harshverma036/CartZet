@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FormContainer from "../Components/FormCotainer";
-import {
-  TextField,
-  Button,
-  Box,
-  Typography,
-  CircularProgress,
-} from "@material-ui/core";
-import { teal } from "@material-ui/core/colors";
-import { Alert } from "@material-ui/lab";
-import { Link } from "react-router-dom";
+import { TextField, Button, Box, Typography } from "@material-ui/core";
 import Steps from "../Components/Steps";
 import { useDispatch, useSelector } from "react-redux";
 import { addShippingAddress } from "../actions/cartActions";
@@ -36,7 +27,7 @@ const ShppingScreen = ({ history }) => {
       setPin(shippingAddress.pin);
       setCountry(shippingAddress.country);
     }
-  }, [userInfo, history]);
+  }, [userInfo, history, shippingAddress]);
 
   const submitHandler = (e) => {
     e.preventDefault();

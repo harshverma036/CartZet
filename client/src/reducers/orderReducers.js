@@ -5,6 +5,10 @@ import {
   PLACE_NEW_ORDER_FAIL,
   PLACE_NEW_ORDER_REQUEST,
   PLACE_NEW_ORDER_SUCCESS,
+  UPDATE_DELIVERY_FAIL,
+  UPDATE_DELIVERY_REQUEST,
+  UPDATE_DELIVERY_RESET,
+  UPDATE_DELIVERY_SUCCESS,
 } from "../constants/orderConstants";
 
 export const placeNewOrderReducer = (
@@ -34,6 +38,21 @@ export const orderDetailsReducer = (
       return { loading: false, order: action.payload };
     case ORDER_DETAILS_FAIL:
       return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const orderDeliveryReducer = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_DELIVERY_REQUEST:
+      return { loading: true };
+    case UPDATE_DELIVERY_SUCCESS:
+      return { loading: false, success: true };
+    case UPDATE_DELIVERY_FAIL:
+      return { loading: false, error: action.payload };
+    case UPDATE_DELIVERY_RESET:
+      return {};
     default:
       return state;
   }

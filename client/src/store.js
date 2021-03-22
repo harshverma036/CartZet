@@ -14,6 +14,7 @@ import {
 import {
   placeNewOrderReducer,
   orderDetailsReducer,
+  orderDeliveryReducer,
 } from "./reducers/orderReducers";
 
 const reducer = combineReducers({
@@ -25,6 +26,7 @@ const reducer = combineReducers({
   userProfileDetails: userProfileDetailsReducer,
   placeNewOrder: placeNewOrderReducer,
   orderDetails: orderDetailsReducer,
+  orderDelivery: orderDeliveryReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
@@ -48,6 +50,7 @@ const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
     shippingAddress: shippingAddressFromStorage,
+    payment: paymentMethodFromStorage,
   },
 };
 

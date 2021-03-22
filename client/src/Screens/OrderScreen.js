@@ -18,7 +18,7 @@ import { Alert } from "@material-ui/lab";
 import { grey } from "@material-ui/core/colors";
 import Loader from "../Components/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderDetails } from "../actions/orderActions";
+import { getOrderDetails, updateDelivery } from "../actions/orderActions";
 
 const OrderScreen = ({ history, match }) => {
   const productId = match.params.id;
@@ -30,13 +30,26 @@ const OrderScreen = ({ history, match }) => {
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, order, error } = orderDetails;
 
+  const orderDelivery = useSelector((state) => state.orderDelivery);
+  const {
+    loading: deliveryLoading,
+    success: deliverySuccess,
+    error: deliveryError,
+  } = orderDelivery;
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
-    } else {
+    }
+    if (deliverySuccess) {
       dispatch(getOrderDetails(productId));
     }
-  }, [userInfo, history, dispatch, productId]);
+    dispatch(getOrderDetails(productId));
+  }, [userInfo, history, dispatch, productId, deliverySuccess]);
+
+  const updateDeliveryHandler = () => {
+    dispatch(updateDelivery(productId));
+  };
 
   return loading ? (
     <Loader />
@@ -176,19 +189,22 @@ const OrderScreen = ({ history, match }) => {
             </ListItem>
 
             <ListItem component={Box} display="flex" flexDirection="column">
-              {/* {error && (
+              {deliveryError && (
                 <Alert severity="error" style={{ marginBottom: 12 }}>
-                  {error}
+                  {deliveryError}
                 </Alert>
-              )} */}
+              )}
               {userInfo.isAdmin && (
                 <Button
                   variant="contained"
                   color="primary"
                   fullWidth
-                  // disabled={loading}
+                  onClick={updateDeliveryHandler}
+                  disabled={deliveryLoading || order.isDelivered}
                 >
-                  {/* {loading && <CircularProgress color="inherit" size={20} />} */}
+                  {deliveryLoading && (
+                    <CircularProgress color="inherit" size={20} />
+                  )}
                   &nbsp; &nbsp;
                   {"Mark As Delivered"}
                 </Button>
