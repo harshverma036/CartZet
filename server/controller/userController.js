@@ -75,3 +75,26 @@ export const getUserById = asyncHandler(async (req, res) => {
   } else {
   }
 });
+
+// DESC => Update user info
+// ROUTE => PUT /api/users/profile
+// ACCESS => Private
+export const updateUserInfo = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = name || user.name;
+    user.email = email || user.email;
+    if (password) {
+      user.password = password || user.password;
+    }
+
+    const updatedUser = await user.save();
+    res.json(updatedUser);
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
+  }
+});
