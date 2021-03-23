@@ -6,11 +6,13 @@ import {
   Button,
   Box,
   Typography,
+  CircularProgress,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import Loader from "../Components/Loader";
 import { useSelector, useDispatch } from "react-redux";
-import { getUserDetails } from "../actions/userActions";
+import { getUserDetails, updateUserProfile } from "../actions/userActions";
+import { USER_PROFILE_UPDATE_RESET } from "../constants/userContstants";
 
 const ProfileScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -18,6 +20,7 @@ const ProfileScreen = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -25,20 +28,41 @@ const ProfileScreen = ({ history }) => {
   const userProfileDetails = useSelector((state) => state.userProfileDetails);
   const { loading, userDetails, error } = userProfileDetails;
 
+  const userProfileUpdate = useSelector((state) => state.userProfileUpdate);
+  const {
+    loading: updateLoading,
+    success: updateSuccess,
+    error: updateError,
+  } = userProfileUpdate;
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
     } else {
-      if (!userDetails.name) {
+      if (!userDetails.name || updateSuccess) {
         dispatch(getUserDetails());
+        dispatch({ type: USER_PROFILE_UPDATE_RESET });
+        setPassword("");
+        setConfirmPassword("");
       } else {
         setFName(userDetails.name);
         setEmail(userDetails.email);
       }
     }
-  }, [userInfo, history, userDetails, dispatch]);
+    if (updateSuccess) {
+    }
+  }, [userInfo, history, userDetails, dispatch, updateSuccess]);
 
-  const submitHandler = () => console.log("Clicked");
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Password do not match");
+    } else {
+      dispatch(updateUserProfile({ name: fname, email, password }));
+    }
+  };
+
   return (
     <Container maxWidth="lg" style={{ marginTop: 30 }}>
       <Grid container style={{ marginTop: 20 }} spacing={3}>
@@ -48,6 +72,11 @@ const ProfileScreen = ({ history }) => {
           <Alert severity="error">{error}</Alert>
         ) : (
           <Grid item md={4} xs={12}>
+            {updateSuccess && (
+              <Alert severity="success">{"Profile Update."}</Alert>
+            )}
+            {updateError && <Alert severity="error">{updateError}</Alert>}
+            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
             <Typography variant="h4">Profile</Typography>
             <Box
               display="flex"
@@ -105,8 +134,12 @@ const ProfileScreen = ({ history }) => {
                 fullWidth
                 style={{ marginTop: 15 }}
                 type="submit"
+                disabled={updateLoading}
               >
-                Update Profile
+                {updateLoading && (
+                  <CircularProgress color="inherit" size={20} />
+                )}
+                &nbsp; &nbsp; Update Profile
               </Button>
             </Box>
           </Grid>
