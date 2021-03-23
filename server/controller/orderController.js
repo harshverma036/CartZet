@@ -70,3 +70,17 @@ export const updateDeliveryStatus = asyncHandler(async (req, res) => {
     throw new Error("Order not found.");
   }
 });
+
+// DESC => Get order list of user by id
+// ROUTE => GET /api/orders
+// ACCESS => Private
+export const getOrdersListById = asyncHandler(async (req, res) => {
+  const orders = await Order.find({ user: req.user._id });
+
+  if (orders) {
+    res.status(200).json(orders);
+  } else {
+    res.status(401);
+    throw new Error("No orders found!");
+  }
+});
