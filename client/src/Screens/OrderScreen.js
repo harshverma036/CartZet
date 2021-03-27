@@ -194,13 +194,15 @@ const OrderScreen = ({ history, match }) => {
                   {deliveryError}
                 </Alert>
               )}
-              {userInfo.isAdmin && (
+
+              {userInfo && (
                 <Button
                   variant="contained"
                   color="primary"
                   fullWidth
                   onClick={updateDeliveryHandler}
                   disabled={deliveryLoading || order.isDelivered}
+                  style={{ display: userInfo.isAdmin ? "block" : "none" }}
                 >
                   {deliveryLoading && (
                     <CircularProgress color="inherit" size={20} />

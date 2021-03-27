@@ -1,5 +1,10 @@
 import axios from "axios";
 import {
+  USER_ORDERS_LIST_FAIL,
+  USER_ORDERS_LIST_REQUEST,
+  USER_ORDERS_LIST_SUCCESS,
+} from "../constants/orderConstants";
+import {
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
   USER_LOGIN_FAIL,
@@ -120,6 +125,34 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_PROFILE_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUserOrdersList = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_ORDERS_LIST_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/orders", config);
+
+    dispatch({ type: USER_ORDERS_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_ORDERS_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

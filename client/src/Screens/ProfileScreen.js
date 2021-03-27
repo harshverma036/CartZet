@@ -7,11 +7,23 @@ import {
   Box,
   Typography,
   CircularProgress,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  TableContainer,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import { Link } from "react-router-dom";
+// import {  } from '@material-ui/icons'
 import Loader from "../Components/Loader";
 import { useSelector, useDispatch } from "react-redux";
-import { getUserDetails, updateUserProfile } from "../actions/userActions";
+import {
+  getUserDetails,
+  updateUserProfile,
+  getUserOrdersList,
+} from "../actions/userActions";
 import { USER_PROFILE_UPDATE_RESET } from "../constants/userContstants";
 
 const ProfileScreen = ({ history }) => {
@@ -35,6 +47,13 @@ const ProfileScreen = ({ history }) => {
     error: updateError,
   } = userProfileUpdate;
 
+  const userOrdersList = useSelector((state) => state.userOrdersList);
+  const {
+    loading: ordersLoading,
+    orders: allOrders,
+    error: ordersError,
+  } = userOrdersList;
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
@@ -48,8 +67,7 @@ const ProfileScreen = ({ history }) => {
         setFName(userDetails.name);
         setEmail(userDetails.email);
       }
-    }
-    if (updateSuccess) {
+      dispatch(getUserOrdersList());
     }
   }, [userInfo, history, userDetails, dispatch, updateSuccess]);
 
@@ -146,6 +164,48 @@ const ProfileScreen = ({ history }) => {
         )}
         <Grid item md={8} xs={12}>
           <Typography variant="h4">My Orders</Typography>
+
+          {ordersLoading ? (
+            <Loader />
+          ) : ordersError ? (
+            <Alert severity="error">{ordersError}</Alert>
+          ) : (
+            <TableContainer component={Box}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>ID</TableCell>
+                    <TableCell>Order Date</TableCell>
+                    <TableCell>Paid</TableCell>
+                    <TableCell>Delivered</TableCell>
+                    <TableCell align="right">Details</TableCell>
+                  </TableRow>
+                </TableHead>
+                {/* allOrders */}
+                <TableBody>
+                  {allOrders.map((order) => (
+                    <TableRow key={order._id}>
+                      <TableCell>{order._id}</TableCell>
+                      <TableCell>{order.createdAt.split("T")[0]}</TableCell>
+                      <TableCell>{order.isPaid ? "YES" : "NOT"}</TableCell>
+                      <TableCell>{order.isDelivered ? "YES" : "NOT"}</TableCell>
+                      <TableCell align="right">
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          color="inherit"
+                          component={Link}
+                          to={`/order/${order._id}`}
+                        >
+                          Details
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </Grid>
       </Grid>
     </Container>

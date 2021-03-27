@@ -9,6 +9,9 @@ import {
   UPDATE_DELIVERY_REQUEST,
   UPDATE_DELIVERY_RESET,
   UPDATE_DELIVERY_SUCCESS,
+  USER_ORDERS_LIST_FAIL,
+  USER_ORDERS_LIST_REQUEST,
+  USER_ORDERS_LIST_SUCCESS,
 } from "../constants/orderConstants";
 
 export const placeNewOrderReducer = (
@@ -53,6 +56,22 @@ export const orderDeliveryReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
     case UPDATE_DELIVERY_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const userOrdersListReducer = (
+  state = { orders: [], shippingAddress: {}, orderItems: [] },
+  action
+) => {
+  switch (action.type) {
+    case USER_ORDERS_LIST_REQUEST:
+      return { loading: true };
+    case USER_ORDERS_LIST_SUCCESS:
+      return { loading: false, orders: action.payload };
+    case USER_ORDERS_LIST_FAIL:
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
