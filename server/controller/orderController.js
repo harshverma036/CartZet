@@ -84,3 +84,17 @@ export const getOrdersListById = asyncHandler(async (req, res) => {
     throw new Error("No orders found!");
   }
 });
+
+// DESC => Get all orders
+// ROUTE => GET /api/orders/all
+// ACCESS => Private/Admin
+export const getAllOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({});
+
+  if (orders) {
+    res.status(200).json(orders);
+  } else {
+    res.status(404);
+    throw new Error("No orders found");
+  }
+});
