@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   ButtonGroup,
@@ -11,10 +11,32 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import Loader from "../Components/Loader";
 import { Delete, Edit } from "@material-ui/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllUsers } from "../actions/userActions";
 
-const AdminUsersScreeen = () => {
-  return (
+const AdminUsersScreeen = ({ history }) => {
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const listUsers = useSelector((state) => state.listUsers);
+  const { loading, users, error } = listUsers;
+
+  useEffect(() => {
+    if (!userInfo && !userInfo.isAdmin) {
+      history.push("/login");
+    }
+    dispatch(getAllUsers());
+  }, [userInfo, history, dispatch]);
+  return loading ? (
+    <Loader />
+  ) : error ? (
+    <Alert severity="error">{error}</Alert>
+  ) : (
     <Grid container justify="center" style={{ marginTop: 16 }}>
       <Grid item xs={10}>
         <Typography variant="h3">{"Users"}</Typography>
@@ -32,25 +54,31 @@ const AdminUsersScreeen = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">SAMPLE</TableCell>
-                <TableCell align="center">6</TableCell>
-                <TableCell align="center">89</TableCell>
-                <TableCell align="center">
-                  <ButtonGroup
-                    size="small"
-                    aria-label="small outlined button group"
-                  >
-                    <Button variant="contained" color="secondary">
-                      <Edit />
-                    </Button>
-                    <Button variant="contained" color="primary">
-                      <Delete />
-                    </Button>
-                  </ButtonGroup>
-                </TableCell>
-              </TableRow>
+              {users.map((user) => (
+                <TableRow key={user._id}>
+                  <TableCell align="center">{user._id}</TableCell>
+                  <TableCell align="center">{user.name}</TableCell>
+                  <TableCell align="center">
+                    {user.isAdmin ? "YES" : "NO"}
+                  </TableCell>
+                  <TableCell align="center">
+                    {user.createdAt.split("T")[0]}
+                  </TableCell>
+                  <TableCell align="center">
+                    <ButtonGroup
+                      size="small"
+                      aria-label="small outlined button group"
+                    >
+                      <Button variant="contained" color="secondary">
+                        <Edit />
+                      </Button>
+                      <Button variant="contained" color="primary">
+                        <Delete />
+                      </Button>
+                    </ButtonGroup>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>
