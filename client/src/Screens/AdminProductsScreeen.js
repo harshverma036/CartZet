@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   ButtonGroup,
@@ -11,9 +11,24 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
+import { useSelector, useDispatch } from "react-redux";
+import Loader from "../Components/Loader";
+import { Alert } from "@material-ui/lab";
+import { getProductsList } from "../actions/productActions";
 import { Delete, Edit } from "@material-ui/icons";
 
-const AdminProductsScreeen = () => {
+const AdminProductsScreeen = ({ history }) => {
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
+  const productsList = useSelector((state) => state.productsList);
+  const { loading, products, error } = productsList;
+
+  useEffect(() => {
+    if (!userInfo || !userInfo.isAdmin) {
+      history.push("/login");
+    }
+  }, [userInfo, history]);
   return (
     <Grid container justify="center" style={{ marginTop: 16 }}>
       <Grid item xs={10}>
@@ -32,25 +47,31 @@ const AdminProductsScreeen = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow>
-                <TableCell align="center">1</TableCell>
-                <TableCell align="center">SAMPLE</TableCell>
-                <TableCell align="center">6</TableCell>
-                <TableCell align="center">89</TableCell>
-                <TableCell align="center">
-                  <ButtonGroup
-                    size="small"
-                    aria-label="small outlined button group"
-                  >
-                    <Button variant="contained" color="secondary">
-                      <Edit />
-                    </Button>
-                    <Button variant="contained" color="primary">
-                      <Delete />
-                    </Button>
-                  </ButtonGroup>
-                </TableCell>
-              </TableRow>
+              {products.map((product) => (
+                <TableRow key={product._id}>
+                  <TableCell align="center">{product._id}</TableCell>
+                  <TableCell align="center">{product.name}</TableCell>
+                  <TableCell align="center">
+                    {product.countInStock > 0
+                      ? product.countInStock
+                      : "OUT OF STOCK"}
+                  </TableCell>
+                  <TableCell align="center">{product.price}</TableCell>
+                  <TableCell align="center">
+                    <ButtonGroup
+                      size="small"
+                      aria-label="small outlined button group"
+                    >
+                      <Button variant="contained" color="secondary">
+                        <Edit />
+                      </Button>
+                      <Button variant="contained" color="primary">
+                        <Delete />
+                      </Button>
+                    </ButtonGroup>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

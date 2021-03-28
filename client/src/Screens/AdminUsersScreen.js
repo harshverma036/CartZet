@@ -27,7 +27,7 @@ const AdminUsersScreeen = ({ history }) => {
   const { loading, users, error } = listUsers;
 
   useEffect(() => {
-    if (!userInfo && !userInfo.isAdmin) {
+    if (!userInfo || !userInfo.isAdmin) {
       history.push("/login");
     }
     dispatch(getAllUsers());
@@ -71,9 +71,6 @@ const AdminUsersScreeen = ({ history }) => {
                     >
                       <Button variant="contained" color="secondary">
                         <Edit />
-                      </Button>
-                      <Button variant="contained" color="primary">
-                        <Delete />
                       </Button>
                     </ButtonGroup>
                   </TableCell>
