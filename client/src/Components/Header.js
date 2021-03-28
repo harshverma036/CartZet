@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   AppBar,
   Container,
@@ -11,6 +11,7 @@ import {
   Badge,
   Menu,
   MenuItem,
+  Divider,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import SideNav from "./SideNav";
@@ -58,6 +59,33 @@ const Header = ({ changeMode }) => {
         My Profile
       </MenuItem>
       <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+      {userInfo && userInfo.isAdmin && (
+        <div>
+          <Divider />
+          <MenuItem disabled>{"Admin Only"}</MenuItem>
+          <MenuItem
+            component={Link}
+            to="/admin/products"
+            onClick={closeProfileMenu}
+          >
+            {"Products"}
+          </MenuItem>
+          <MenuItem
+            component={Link}
+            to="/admin/users"
+            onClick={closeProfileMenu}
+          >
+            {"Users"}
+          </MenuItem>
+          <MenuItem
+            component={Link}
+            to="/admin/orders"
+            onClick={closeProfileMenu}
+          >
+            {"Orders"}
+          </MenuItem>
+        </div>
+      )}
     </Menu>
   );
 

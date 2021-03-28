@@ -191,9 +191,9 @@ const ProfileScreen = ({ history }) => {
                       <TableCell>{order.isDelivered ? "YES" : "NOT"}</TableCell>
                       <TableCell align="right">
                         <Button
-                          variant="outlined"
+                          variant="contained"
                           size="small"
-                          color="inherit"
+                          color="primary"
                           component={Link}
                           to={`/order/${order._id}`}
                         >

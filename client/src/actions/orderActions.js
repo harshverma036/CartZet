@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  ALL_ORDERS_LIST_FAIL,
+  ALL_ORDERS_LIST_REQUEST,
+  ALL_ORDERS_LIST_SUCCESS,
   ORDER_DETAILS_FAIL,
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
@@ -89,6 +92,34 @@ export const updateDelivery = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: UPDATE_DELIVERY_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getOrdersList = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ALL_ORDERS_LIST_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/orders/all", config);
+
+    dispatch({ type: ALL_ORDERS_LIST_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ALL_ORDERS_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

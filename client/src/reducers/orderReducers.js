@@ -1,4 +1,7 @@
 import {
+  ALL_ORDERS_LIST_FAIL,
+  ALL_ORDERS_LIST_REQUEST,
+  ALL_ORDERS_LIST_SUCCESS,
   ORDER_DETAILS_FAIL,
   ORDER_DETAILS_REQUEST,
   ORDER_DETAILS_SUCCESS,
@@ -71,6 +74,19 @@ export const userOrdersListReducer = (
     case USER_ORDERS_LIST_SUCCESS:
       return { loading: false, orders: action.payload };
     case USER_ORDERS_LIST_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const ordersListReducer = (state = { orders: [] }, action) => {
+  switch (action.type) {
+    case ALL_ORDERS_LIST_REQUEST:
+      return { loading: true };
+    case ALL_ORDERS_LIST_SUCCESS:
+      return { loading: false, orders: action.payload };
+    case ALL_ORDERS_LIST_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
