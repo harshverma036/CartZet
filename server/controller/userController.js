@@ -62,7 +62,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 // DESC => Get user by id
 // ROUTE => GET /api/users/:id
 // ACCESS => Private
-export const getUserById = asyncHandler(async (req, res) => {
+export const getUserLoginInfo = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
@@ -73,6 +73,27 @@ export const getUserById = asyncHandler(async (req, res) => {
       isAdmin: user.isAdmin,
     });
   } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+// DESC => Get user by id
+// ROUTE => GET /api/users/:id
+// ACCESS => Private
+export const getUserById = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
   }
 });
 

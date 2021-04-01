@@ -12,8 +12,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
+import { Link } from "react-router-dom";
 import Loader from "../Components/Loader";
-import { Delete, Edit } from "@material-ui/icons";
+import { Edit } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../actions/userActions";
 
@@ -69,7 +70,12 @@ const AdminUsersScreeen = ({ history }) => {
                       size="small"
                       aria-label="small outlined button group"
                     >
-                      <Button variant="contained" color="secondary">
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        component={Link}
+                        to={`/admin/users/edit/${user._id}`}
+                      >
                         <Edit />
                       </Button>
                     </ButtonGroup>

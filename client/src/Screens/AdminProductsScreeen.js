@@ -11,10 +11,7 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core";
-import { useSelector, useDispatch } from "react-redux";
-import Loader from "../Components/Loader";
-import { Alert } from "@material-ui/lab";
-import { getProductsList } from "../actions/productActions";
+import { useSelector } from "react-redux";
 import { Delete, Edit } from "@material-ui/icons";
 
 const AdminProductsScreeen = ({ history }) => {
