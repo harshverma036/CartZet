@@ -7,11 +7,15 @@ import {
   updateUserInfo,
   getAllUsers,
   getUserById,
+  updateUserById,
 } from "../controller/userController.js";
 import { protect, admin } from "../middlewares/authMiddleware.js";
 
 router.route("/").get(protect, admin, getAllUsers);
-router.route("/:id").get(protect, getUserById);
+router
+  .route("/:id")
+  .get(protect, getUserById)
+  .put(protect, admin, updateUserById);
 router
   .route("/profile")
   .get(protect, getUserLoginInfo)

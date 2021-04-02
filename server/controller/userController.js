@@ -133,3 +133,29 @@ export const getAllUsers = asyncHandler(async (req, res) => {
     throw new Error("No users found.");
   }
 });
+
+// DESC => Update user by id
+// ROUTE => PUT /api/users/:id
+// ACCESS => Private/Admin
+export const updateUserById = asyncHandler(async (req, res) => {
+  const { name, email, isAdmin } = req.body;
+  const foundUser = await User.findById(req.params.id);
+
+  if (foundUser) {
+    foundUser.name = foundUser.name || name;
+    foundUser.email = foundUser.email || email;
+    foundUser.isAdmin = isAdmin;
+
+    const updatedUser = await foundUser.save();
+
+    res.status(201).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
