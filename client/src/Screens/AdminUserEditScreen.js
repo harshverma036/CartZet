@@ -8,8 +8,10 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import Loader from "../Components/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserDetails } from "../actions/userActions";
+import { userDetailsById } from "../actions/userActions";
 
 const AdminUserEditScreen = ({ match, history }) => {
   const userId = match.params.id;
@@ -22,19 +24,21 @@ const AdminUserEditScreen = ({ match, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  const userProfileDetails = useSelector((state) => state.userProfileDetails);
-  const { userDetails } = userProfileDetails;
+  const userDetails = useSelector((state) => state.userDetails);
+  const { loading, user, error } = userDetails;
 
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
-    } else {
-      dispatch(getUserDetails());
-      setName(userDetails.name);
-      setEmail(userDetails.email);
-      setIsAdmin(userInfo.isAdmin);
     }
-  }, [userInfo, history, dispatch]);
+    if (!user.name || user._id !== userId) {
+      dispatch(userDetailsById(userId));
+    } else {
+      setName(user.name);
+      setEmail(user.email);
+      setIsAdmin(user.isAdmin);
+    }
+  }, [userInfo, history, dispatch, user, userId]);
 
   return (
     <Box mt={10}>
@@ -43,6 +47,8 @@ const AdminUserEditScreen = ({ match, history }) => {
           <Typography variant="h3" color="primary">
             {"Edit User"}
           </Typography>
+          {loading && <Loader />}
+          {error && <Alert severity="error">{error}</Alert>}
           <Box component="form" display="flex" flexDirection="column">
             <TextField
               variant="outlined"
