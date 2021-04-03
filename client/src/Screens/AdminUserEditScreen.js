@@ -11,7 +11,8 @@ import {
 import { Alert } from "@material-ui/lab";
 import Loader from "../Components/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { userDetailsById } from "../actions/userActions";
+import { userDetailsById, userUpdate } from "../actions/userActions";
+import { USER_UPDATE_RESET } from "../constants/userContstants";
 
 const AdminUserEditScreen = ({ match, history }) => {
   const userId = match.params.id;
@@ -40,6 +41,13 @@ const AdminUserEditScreen = ({ match, history }) => {
     }
   }, [userInfo, history, dispatch, user, userId]);
 
+  const updateSubmitHandler = (e) => {
+    e.preventDefault();
+    dispatch(userUpdate(userId, { name, email, isAdmin }));
+    history.push("/admin/users");
+    dispatch({ type: USER_UPDATE_RESET });
+  };
+
   return (
     <Box mt={10}>
       <Grid container justify="center">
@@ -49,7 +57,12 @@ const AdminUserEditScreen = ({ match, history }) => {
           </Typography>
           {loading && <Loader />}
           {error && <Alert severity="error">{error}</Alert>}
-          <Box component="form" display="flex" flexDirection="column">
+          <Box
+            component="form"
+            display="flex"
+            flexDirection="column"
+            onSubmit={updateSubmitHandler}
+          >
             <TextField
               variant="outlined"
               color="primary"
@@ -90,6 +103,7 @@ const AdminUserEditScreen = ({ match, history }) => {
             <Button
               variant="contained"
               color="primary"
+              type="submit"
               style={{ marginTop: 8 }}
               fullWidth
             >

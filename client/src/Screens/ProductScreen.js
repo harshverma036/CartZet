@@ -27,7 +27,7 @@ const ProductScreen = ({ history, match }) => {
 
   useEffect(() => {
     dispatch(getProductDetails(productId));
-  }, [dispatch]);
+  }, [dispatch, productId]);
 
   const addToCartHandler = () => {
     history.push(`/cart/${productId}?qty=${qty}`);
