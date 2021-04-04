@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, CssBaseline } from "@material-ui/core";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core";
 import { pink, teal } from "@material-ui/core/colors";
 import { Provider } from "react-redux";
@@ -21,6 +21,7 @@ import AdminProductsScreen from "./Screens/AdminProductsScreeen";
 import AdminUsersScreeen from "./Screens/AdminUsersScreen";
 import AdminOrdersScreeen from "./Screens/AdminOrdersScreeen";
 import AdminUserEditScreen from "./Screens/AdminUserEditScreen";
+import AdminProductEditScreen from "./Screens/AdminEditProductScreen";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -43,23 +44,30 @@ function App() {
         <Router>
           <Header changeMode={() => setDarkMode(!darkMode)} />
           <Container maxWidth="lg">
-            <Route
-              path="/admin/users/edit/:id"
-              component={AdminUserEditScreen}
-            />
-            <Route path="/admin/users" component={AdminUsersScreeen} exact />
-            <Route path="/admin/orders" component={AdminOrdersScreeen} />
-            <Route path="/admin/products" component={AdminProductsScreen} />
-            <Route path="/order/:id" component={OrderScreen} />
-            <Route path="/placeorder" component={PlaceOrderScreen} />
-            <Route path="/payment" component={PaymentScreen} />
-            <Route path="/shipping" component={ShippingScreen} />
-            <Route path="/profile" component={ProfileScreen} />
-            <Route path="/cart/:id?" component={CartScreen} />
-            <Route path="/product/:id" component={ProductScreen} />
-            <Route path="/register" component={RegisterScreen} />
-            <Route path="/login" component={LoginScreen} />
-            <Route path="/" component={HomeScreen} exact />
+            <Switch>
+              <Route
+                path="/admin/users/edit/:id"
+                component={AdminUserEditScreen}
+              />
+              <Route path="/admin/" component={AdminUsersScreeen} exact />
+              <Route path="/admin/users" component={AdminUsersScreeen} exact />
+              <Route path="/admin/orders" component={AdminOrdersScreeen} />
+              <Route
+                path="/admin/products/:id"
+                component={AdminProductEditScreen}
+              />
+              <Route path="/admin/products" component={AdminProductsScreen} />
+              <Route path="/order/:id" component={OrderScreen} />
+              <Route path="/placeorder" component={PlaceOrderScreen} />
+              <Route path="/payment" component={PaymentScreen} />
+              <Route path="/shipping" component={ShippingScreen} />
+              <Route path="/profile" component={ProfileScreen} />
+              <Route path="/cart/:id?" component={CartScreen} />
+              <Route path="/product/:id" component={ProductScreen} />
+              <Route path="/register" component={RegisterScreen} />
+              <Route path="/login" component={LoginScreen} />
+              <Route path="/" component={HomeScreen} exact />
+            </Switch>
           </Container>
           <Footer />
         </Router>

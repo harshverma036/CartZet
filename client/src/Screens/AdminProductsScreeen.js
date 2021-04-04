@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {
+  Box,
   Button,
   ButtonGroup,
   Grid,
@@ -12,7 +13,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { Delete, Edit } from "@material-ui/icons";
+import { Delete, Edit, Add } from "@material-ui/icons";
 import Loader from "../Components/Loader";
 import { Alert } from "@material-ui/lab";
 import { getProductsList } from "../actions/productActions";
@@ -34,15 +35,23 @@ const AdminProductsScreeen = ({ history }) => {
   }, [userInfo, history]);
   return (
     <Grid container justify="center" style={{ marginTop: 16 }}>
-      <Grid item xs={12}>
+      <Grid item xs={12} component={Box} display="flex" flexDirection="row">
         <Typography variant="h3">{"Products"}</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginLeft: "auto" }}
+        >
+          <Add />
+          &nbsp;Add Product
+        </Button>
       </Grid>
       {loading ? (
         <Loader />
       ) : error ? (
         <Alert severity="error">{error}</Alert>
       ) : (
-        <Grid item xs={10} style={{ marginTop: 10 }}>
+        <Grid item xs={12} style={{ marginTop: 10 }}>
           <TableContainer>
             <Table>
               <TableHead>
