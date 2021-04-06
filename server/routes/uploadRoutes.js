@@ -39,7 +39,7 @@ const upload = multer({
 });
 
 // Upload single image at once
-router.route("/", upload.single("image"), (req, res) => {
+router.post("/", upload.single("image"), (req, res) => {
   res.send(`/${req.file.path}`);
 });
 
