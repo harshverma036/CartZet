@@ -17,8 +17,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Delete, Edit, Add } from "@material-ui/icons";
 import Loader from "../Components/Loader";
 import { Alert } from "@material-ui/lab";
-import { getProductsList, createProduct } from "../actions/productActions";
-import { CREATE_PRODUCT_RESET } from "../constants/productConstants";
+import {
+  getProductsList,
+  createProduct,
+  delProduct,
+} from "../actions/productActions";
+import {
+  CREATE_PRODUCT_RESET,
+  DELETE_PRODUCT_RESET,
+} from "../constants/productConstants";
 
 const AdminProductsScreeen = ({ history }) => {
   const dispatch = useDispatch();
@@ -36,8 +43,16 @@ const AdminProductsScreeen = ({ history }) => {
     error: createProductError,
   } = createNewProduct;
 
+  const deleteProduct = useSelector((state) => state.deleteProduct);
+  const {
+    loading: DeleteProductLoading,
+    success: deleteProductSuccess,
+    error: deleteProductError,
+  } = deleteProduct;
+
   useEffect(() => {
     dispatch({ type: CREATE_PRODUCT_RESET });
+    dispatch({ type: DELETE_PRODUCT_RESET });
     if (!userInfo || !userInfo.isAdmin) {
       history.push("/login");
     } else {
@@ -46,17 +61,33 @@ const AdminProductsScreeen = ({ history }) => {
     if (success) {
       history.push(`/admin/products/${newProduct._id}`);
     }
-  }, [userInfo, history, success]);
+    if (deleteProductSuccess) {
+      dispatch(getProductsList());
+    }
+  }, [userInfo, history, success, deleteProductSuccess]);
 
   const createProductHandler = () => {
     dispatch(createProduct());
   };
+
+  const deleteProductHandler = (id) => {
+    dispatch(delProduct(id));
+  };
+
   return (
     <Grid container justify="center" style={{ marginTop: 16 }}>
+      {DeleteProductLoading && <Loader />}
       <Grid item xs={12} component={Box} display="flex" flexDirection="row">
         {createProductError && (
           <Alert severity="error">{createProductError}</Alert>
         )}
+        {deleteProductError && (
+          <Alert severity="error">{deleteProductError}</Alert>
+        )}
+        {deleteProductSuccess && (
+          <Alert severity="success">{"Product removed."}</Alert>
+        )}
+
         <Typography variant="h3">{"Products"}</Typography>
         <Button
           variant="contained"
@@ -113,7 +144,11 @@ const AdminProductsScreeen = ({ history }) => {
                         <Button variant="contained" color="secondary">
                           <Edit />
                         </Button>
-                        <Button variant="contained" color="primary">
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => deleteProductHandler(product._id)}
+                        >
                           <Delete />
                         </Button>
                       </ButtonGroup>
