@@ -14,6 +14,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { Delete, Edit, Add } from "@material-ui/icons";
 import Loader from "../Components/Loader";
 import { Alert } from "@material-ui/lab";
@@ -141,7 +142,12 @@ const AdminProductsScreeen = ({ history }) => {
                         size="small"
                         aria-label="small outlined button group"
                       >
-                        <Button variant="contained" color="secondary">
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          component={Link}
+                          to={`/admin/products/${product._id}`}
+                        >
                           <Edit />
                         </Button>
                         <Button
