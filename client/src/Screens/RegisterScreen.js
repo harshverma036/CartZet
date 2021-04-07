@@ -23,7 +23,7 @@ const RegisterScreen = ({ history }) => {
   const { userInfo } = userLogin;
 
   const userRegister = useSelector((state) => state.userRegister);
-  const { loading, registeredUser, success, error } = userRegister;
+  const { loading, success, error } = userRegister;
 
   useEffect(() => {
     if (userInfo) {

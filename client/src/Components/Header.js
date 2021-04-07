@@ -94,7 +94,7 @@ const Header = ({ changeMode }) => {
       <AppBar color="primary" position="relative">
         <Container maxWidth="lg">
           <Toolbar>
-            <Hidden lgUp>
+            <Hidden xsUp>
               <IconButton
                 edge="start"
                 aria-label="menu"

@@ -1,6 +1,6 @@
 import React from "react";
-import { Drawer, List, ListItem, Typography, Switch } from "@material-ui/core";
-import { Brightness3, Person } from "@material-ui/icons";
+import { Drawer, List, ListItem, Typography } from "@material-ui/core";
+import { Person } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
 
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SideNav = ({ open, close, changeMode }) => {
+const SideNav = ({ open, close }) => {
   const classes = useStyles();
   return (
     <Drawer open={open} onClose={close}>

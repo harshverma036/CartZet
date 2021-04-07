@@ -53,7 +53,7 @@ const AdminProductEditScreen = ({ match, history }) => {
     if (updateProductSuccess) {
       history.push("/admin/products");
     }
-  }, [dispatch, productId, product, updateProductSuccess]);
+  }, [dispatch, productId, product, updateProductSuccess, history]);
 
   const uploadImageHandler = async (e) => {
     const file = e.target.files[0];
@@ -101,6 +101,9 @@ const AdminProductEditScreen = ({ match, history }) => {
           <Typography variant="h3" color="primary">
             {"Edit Product"}
           </Typography>
+          {updateProductError && (
+            <Alert severity="error">{updateProductError}</Alert>
+          )}
           {loading ? (
             <Loader />
           ) : error ? (

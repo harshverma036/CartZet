@@ -65,7 +65,7 @@ const AdminProductsScreeen = ({ history }) => {
     if (deleteProductSuccess) {
       dispatch(getProductsList());
     }
-  }, [userInfo, history, success, deleteProductSuccess]);
+  }, [userInfo, history, success, deleteProductSuccess, dispatch, newProduct]);
 
   const createProductHandler = () => {
     dispatch(createProduct());

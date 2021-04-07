@@ -10,10 +10,10 @@ import {
 import Steps from "../Components/Steps";
 import { useDispatch, useSelector } from "react-redux";
 import { addPaymentMethod } from "../actions/cartActions";
-import { Link } from "react-router-dom";
 
 const ShppingScreen = ({ history }) => {
   const dispatch = useDispatch();
+  // eslint-disable-next-line
   const [payment, setPayment] = useState("PayPal");
 
   const userLogin = useSelector((state) => state.userLogin);
