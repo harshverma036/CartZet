@@ -5,14 +5,15 @@ import {
   Button,
   Box,
   Typography,
-  FormControlLabel,
-  Checkbox,
+  CircularProgress,
 } from "@material-ui/core";
 import { ImageRounded } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 import Loader from "../Components/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { getProductDetails } from "../actions/productActions";
+import { getProductDetails, updtProduct } from "../actions/productActions";
+import { UPDATE_PRODUCT_RESET } from "../constants/productConstants";
+import axios from "axios";
 
 const AdminProductEditScreen = ({ match, history }) => {
   const productId = match.params.id;
@@ -29,7 +30,15 @@ const AdminProductEditScreen = ({ match, history }) => {
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
 
+  const updateProduct = useSelector((state) => state.updateProduct);
+  const {
+    loading: updateProductLoading,
+    success: updateProductSuccess,
+    error: updateProductError,
+  } = updateProduct;
+
   useEffect(() => {
+    dispatch({ type: UPDATE_PRODUCT_RESET });
     if (!product || productId !== product._id) {
       dispatch(getProductDetails(productId));
     } else {
@@ -41,11 +50,48 @@ const AdminProductEditScreen = ({ match, history }) => {
       setPrice(product.price);
       setCountInStock(product.countInStock);
     }
-  }, [dispatch, productId, product]);
+    if (updateProductSuccess) {
+      history.push("/admin/products");
+    }
+  }, [dispatch, productId, product, updateProductSuccess]);
+
+  const uploadImageHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const { data } = await axios.post("/api/upload", formData, config);
+
+      setImage(data);
+    } catch (error) {
+      const err =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      console.log(err);
+    }
+  };
 
   const updateSubmitHandler = (e) => {
     e.preventDefault();
-    // DISPATCH UPDATE PRODUCT
+    dispatch(
+      updtProduct(productId, {
+        name,
+        image,
+        description,
+        brand,
+        category,
+        price,
+        countInStock,
+      })
+    );
   };
 
   return (
@@ -146,12 +192,12 @@ const AdminProductEditScreen = ({ match, history }) => {
               />
 
               <input
-                accept="image/*"
-                id="contained-button-file"
+                id="image"
                 style={{ display: "none" }}
                 type="file"
+                onChange={uploadImageHandler}
               />
-              <label htmlFor="contained-button-file">
+              <label htmlFor="image">
                 <Button
                   variant="contained"
                   color="primary"
@@ -184,7 +230,15 @@ const AdminProductEditScreen = ({ match, history }) => {
                 style={{ marginTop: 8 }}
                 fullWidth
               >
-                {"Save"}
+                {updateProductLoading ? (
+                  <>
+                    <CircularProgress size={20} color="inherit" />
+                    &nbsp;
+                    {"Updating..."}
+                  </>
+                ) : (
+                  "Update Product"
+                )}
               </Button>
             </Box>
           )}
