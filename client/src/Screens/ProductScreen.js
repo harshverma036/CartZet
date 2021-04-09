@@ -11,7 +11,9 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  TextField,
 } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Components/Loader";
 import { getProductDetails } from "../actions/productActions";
@@ -25,12 +27,20 @@ const ProductScreen = ({ history, match }) => {
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, product, error } = productDetails;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   useEffect(() => {
     dispatch(getProductDetails(productId));
   }, [dispatch, productId]);
 
   const addToCartHandler = () => {
     history.push(`/cart/${productId}?qty=${qty}`);
+  };
+
+  const reviewSubmitHandler = (e) => {
+    e.preventDefault();
+    console.log("Submited...");
   };
 
   return loading ? (
@@ -61,6 +71,87 @@ const ProductScreen = ({ history, match }) => {
           <Typography>
             {product.brand}, {product.category}
           </Typography>
+          <List>
+            <ListItem>
+              <Typography variant="h5">{"Reviews"}</Typography>
+            </ListItem>
+            <ListItem style={{ marginBottom: 10 }}>
+              {userInfo ? (
+                <Box
+                  component="form"
+                  onSubmit={reviewSubmitHandler}
+                  width="100%"
+                >
+                  <FormControl variant="outlined" fullWidth>
+                    <InputLabel id="qty">Rating</InputLabel>
+                    <Select
+                      labelId="qty"
+                      // value={qty}
+                      // onChange={(e) => setQty(e.target.value)}
+                      id="qty"
+                      label="Rating"
+                    >
+                      <MenuItem value="1">{"Poor"}</MenuItem>
+                      <MenuItem value="2">{"Fair"}</MenuItem>
+                      <MenuItem value="3">{"Good"}</MenuItem>
+                      <MenuItem value="4">{"Better"}</MenuItem>
+                      <MenuItem value="5">{"Excellent"}</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <TextField
+                    placeholder="Enter Comment"
+                    label="Comment"
+                    variant="outlined"
+                    color="primary"
+                    type="text"
+                    fullWidth
+                    margin="normal"
+                    multiline
+                    rows={4}
+                    // value={password}
+                    // onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+
+                  <Button variant="contained" color="primary" type="submit">
+                    {"Submit Review"}
+                  </Button>
+                </Box>
+              ) : (
+                <Box display="flex" flexDirection="column">
+                  <Typography style={{ marginBottom: 8 }}>
+                    {"Please login to submit review"}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    component={Link}
+                    to="/login"
+                  >
+                    {"Login"}
+                  </Button>
+                </Box>
+              )}
+            </ListItem>
+            {product.reviews.length === 0 ? (
+              <Alert severity="info">{"No reviews yet"}</Alert>
+            ) : (
+              product.reviews.map((review) => (
+                <ListItem key={review._id}>
+                  <Box display="flex" flexDirection="column">
+                    <Typography variant="h6" style={{ color: "grey" }}>
+                      {review.name}
+                    </Typography>
+                    <Typography>{`Rating: ${review.rating}/5`}</Typography>
+                    <Typography paragraph>{review.comment}</Typography>
+                  </Box>
+                  <Divider variant="fullWidth" />
+                </ListItem>
+              ))
+            )}
+          </List>
         </Grid>
         <Grid item md={3}>
           <List>
