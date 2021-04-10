@@ -99,7 +99,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get("/api/users/profile", config);
+    const { data } = await axios.get("/api/users/profile/my", config);
 
     dispatch({ type: USER_PROFILE_DETAILS_SUCCESS, payload: data });
   } catch (error) {

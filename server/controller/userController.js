@@ -60,9 +60,10 @@ export const registerUser = asyncHandler(async (req, res) => {
 });
 
 // DESC => Get user by id
-// ROUTE => GET /api/users/:id
+// ROUTE => GET /api/users/profile
 // ACCESS => Private
 export const getUserLoginInfo = asyncHandler(async (req, res) => {
+  console.log(req.user._id);
   const user = await User.findById(req.user._id);
 
   if (user) {
