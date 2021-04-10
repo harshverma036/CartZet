@@ -161,7 +161,7 @@ const ProductScreen = ({ history, match }) => {
             </ListItem>
           </List>
         </Grid>
-        <Grid lg={5} md={6} xs={12}>
+        <Grid item lg={5} md={6} xs={12}>
           <List>
             <ListItem>
               <Typography variant="h5">{"Reviews"}</Typography>

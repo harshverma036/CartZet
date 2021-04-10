@@ -140,18 +140,25 @@ const Header = ({ changeMode }) => {
                 <Brightness3 />
               </IconButton>
               {!userInfo && (
-                <Hidden mdDown>
-                  <Button
-                    color="inherit"
-                    size="large"
-                    style={{ marginLeft: 4 }}
-                    component={Link}
-                    to="/login"
-                  >
-                    <Person />
-                    &nbsp; Sign In
-                  </Button>
-                </Hidden>
+                <>
+                  <Hidden mdDown>
+                    <Button
+                      color="inherit"
+                      size="large"
+                      style={{ marginLeft: 4 }}
+                      component={Link}
+                      to="/login"
+                    >
+                      <Person />
+                      &nbsp; Sign In
+                    </Button>
+                  </Hidden>
+                  <Hidden lgUp>
+                    <IconButton color="inherit" component={Link} to="/login">
+                      <Person />
+                    </IconButton>
+                  </Hidden>
+                </>
               )}
               {userInfo && (
                 <Hidden mdDown>

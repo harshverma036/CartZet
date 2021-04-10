@@ -16,15 +16,16 @@ import Ratings from "../Components/Ratings";
 import { getProductsList } from "../actions/productActions";
 import SearchBar from "../Components/searchBar";
 
-const HomeScreen = () => {
+const HomeScreen = ({ match, history }) => {
+  const keyword = match.params.keyword;
   const dispatch = useDispatch();
 
   const productsList = useSelector((state) => state.productsList);
   const { loading, products, error } = productsList;
 
   useEffect(() => {
-    dispatch(getProductsList());
-  }, [dispatch]);
+    dispatch(getProductsList(keyword));
+  }, [dispatch, keyword]);
 
   return loading ? (
     <Loader />
@@ -35,7 +36,7 @@ const HomeScreen = () => {
       {/* <Hidden lgUp> */}
       <Grid container justify="center">
         <Grid item lg={6} xs={12}>
-          <SearchBar />
+          <SearchBar history={history} />
         </Grid>
       </Grid>
       {/* </Hidden> */}
