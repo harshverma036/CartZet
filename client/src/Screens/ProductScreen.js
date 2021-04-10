@@ -12,16 +12,21 @@ import {
   FormControl,
   InputLabel,
   TextField,
+  CircularProgress,
 } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Components/Loader";
-import { getProductDetails } from "../actions/productActions";
+import { createReview, getProductDetails } from "../actions/productActions";
 import { Link } from "react-router-dom";
+import { ADD_REVIEW_RESET } from "../constants/productConstants";
 
 const ProductScreen = ({ history, match }) => {
   const dispatch = useDispatch();
   const [qty, setQty] = useState(1);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
   const productId = match.params.id;
 
   const productDetails = useSelector((state) => state.productDetails);
@@ -30,9 +35,22 @@ const ProductScreen = ({ history, match }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const reviews = useSelector((state) => state.reviews);
+  const {
+    loading: reviewLoading,
+    success: reviewSuccess,
+    error: reviewError,
+  } = reviews;
+
   useEffect(() => {
+    dispatch({ type: ADD_REVIEW_RESET });
+    if (reviewSuccess) {
+      dispatch(getProductDetails(productId));
+      setRating(0);
+      setComment("");
+    }
     dispatch(getProductDetails(productId));
-  }, [dispatch, productId]);
+  }, [dispatch, productId, reviewSuccess]);
 
   const addToCartHandler = () => {
     history.push(`/cart/${productId}?qty=${qty}`);
@@ -40,7 +58,7 @@ const ProductScreen = ({ history, match }) => {
 
   const reviewSubmitHandler = (e) => {
     e.preventDefault();
-    console.log("Submited...");
+    dispatch(createReview(productId, { rating, comment }));
   };
 
   return loading ? (
@@ -71,87 +89,6 @@ const ProductScreen = ({ history, match }) => {
           <Typography>
             {product.brand}, {product.category}
           </Typography>
-          <List>
-            <ListItem>
-              <Typography variant="h5">{"Reviews"}</Typography>
-            </ListItem>
-            <ListItem style={{ marginBottom: 10 }}>
-              {userInfo ? (
-                <Box
-                  component="form"
-                  onSubmit={reviewSubmitHandler}
-                  width="100%"
-                >
-                  <FormControl variant="outlined" fullWidth>
-                    <InputLabel id="qty">Rating</InputLabel>
-                    <Select
-                      labelId="qty"
-                      // value={qty}
-                      // onChange={(e) => setQty(e.target.value)}
-                      id="qty"
-                      label="Rating"
-                    >
-                      <MenuItem value="1">{"Poor"}</MenuItem>
-                      <MenuItem value="2">{"Fair"}</MenuItem>
-                      <MenuItem value="3">{"Good"}</MenuItem>
-                      <MenuItem value="4">{"Better"}</MenuItem>
-                      <MenuItem value="5">{"Excellent"}</MenuItem>
-                    </Select>
-                  </FormControl>
-
-                  <TextField
-                    placeholder="Enter Comment"
-                    label="Comment"
-                    variant="outlined"
-                    color="primary"
-                    type="text"
-                    fullWidth
-                    margin="normal"
-                    multiline
-                    rows={4}
-                    // value={password}
-                    // onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-
-                  <Button variant="contained" color="primary" type="submit">
-                    {"Submit Review"}
-                  </Button>
-                </Box>
-              ) : (
-                <Box display="flex" flexDirection="column">
-                  <Typography style={{ marginBottom: 8 }}>
-                    {"Please login to submit review"}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    component={Link}
-                    to="/login"
-                  >
-                    {"Login"}
-                  </Button>
-                </Box>
-              )}
-            </ListItem>
-            {product.reviews.length === 0 ? (
-              <Alert severity="info">{"No reviews yet"}</Alert>
-            ) : (
-              product.reviews.map((review) => (
-                <ListItem key={review._id}>
-                  <Box display="flex" flexDirection="column">
-                    <Typography variant="h6" style={{ color: "grey" }}>
-                      {review.name}
-                    </Typography>
-                    <Typography>{`Rating: ${review.rating}/5`}</Typography>
-                    <Typography paragraph>{review.comment}</Typography>
-                  </Box>
-                  <Divider variant="fullWidth" />
-                </ListItem>
-              ))
-            )}
-          </List>
         </Grid>
         <Grid item md={3}>
           <List>
@@ -222,6 +159,104 @@ const ProductScreen = ({ history, match }) => {
                 Add To Cart
               </Button>
             </ListItem>
+          </List>
+        </Grid>
+        <Grid lg={5} md={6} xs={12}>
+          <List>
+            <ListItem>
+              <Typography variant="h5">{"Reviews"}</Typography>
+            </ListItem>
+            <ListItem style={{ marginBottom: 10 }}>
+              {userInfo ? (
+                <Box
+                  component="form"
+                  onSubmit={reviewSubmitHandler}
+                  width="100%"
+                >
+                  <FormControl variant="outlined" fullWidth>
+                    <InputLabel id="qty">Rating</InputLabel>
+                    <Select
+                      labelId="qty"
+                      value={rating}
+                      onChange={(e) => setRating(e.target.value)}
+                      id="qty"
+                      label="Rating"
+                    >
+                      <MenuItem value={1}>{"Poor"}</MenuItem>
+                      <MenuItem value={2}>{"Fair"}</MenuItem>
+                      <MenuItem value={3}>{"Good"}</MenuItem>
+                      <MenuItem value={4}>{"Better"}</MenuItem>
+                      <MenuItem value={5}>{"Excellent"}</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <TextField
+                    placeholder="Enter Comment"
+                    label="Comment"
+                    variant="outlined"
+                    color="primary"
+                    type="text"
+                    fullWidth
+                    margin="normal"
+                    multiline
+                    rows={4}
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    required
+                  />
+                  {reviewError && <Alert severity="error">{reviewError}</Alert>}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    style={{ marginTop: 10 }}
+                    disabled={reviewLoading}
+                  >
+                    {reviewLoading ? (
+                      <>
+                        <CircularProgress size={20} color="inherit" />
+                        &nbsp;{"Submitting review...."}
+                      </>
+                    ) : (
+                      "Submit review"
+                    )}
+                  </Button>
+                </Box>
+              ) : (
+                <Box display="flex" flexDirection="column">
+                  <Typography style={{ marginBottom: 8 }}>
+                    {"Please login to submit review"}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    component={Link}
+                    to="/login"
+                  >
+                    {"Login"}
+                  </Button>
+                </Box>
+              )}
+            </ListItem>
+            {product.reviews.length === 0 ? (
+              <Alert severity="info">{"No reviews yet"}</Alert>
+            ) : (
+              product.reviews.map((review) => (
+                <ListItem key={review._id}>
+                  <Box display="flex" flexDirection="column">
+                    <Typography variant="h6" style={{ color: "grey" }}>
+                      {review.name}
+                    </Typography>
+                    <Typography>{`Rating: ${review.rating}/5`}</Typography>
+                    <Typography
+                      paragraph
+                    >{`Comment: ${review.comment}`}</Typography>
+                  </Box>
+                  <Divider variant="fullWidth" />
+                </ListItem>
+              ))
+            )}
           </List>
         </Grid>
       </Grid>
