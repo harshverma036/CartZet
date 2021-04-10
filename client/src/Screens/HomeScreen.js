@@ -7,12 +7,14 @@ import {
   Grid,
   Box,
   Typography,
+  Hidden,
 } from "@material-ui/core";
 import Loader from "../Components/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Ratings from "../Components/Ratings";
 import { getProductsList } from "../actions/productActions";
+import SearchBar from "../Components/searchBar";
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -29,7 +31,14 @@ const HomeScreen = () => {
   ) : error ? (
     <p>{error}</p>
   ) : (
-    <Box mt={2}>
+    <Box mt={2} display="flex" flexDirection="column">
+      {/* <Hidden lgUp> */}
+      <Grid container justify="center">
+        <Grid item lg={6} xs={12}>
+          <SearchBar />
+        </Grid>
+      </Grid>
+      {/* </Hidden> */}
       <Typography variant="h3" style={{ marginBottom: 14 }}>
         Products
       </Typography>
