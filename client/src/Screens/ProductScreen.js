@@ -101,7 +101,9 @@ const ProductScreen = ({ history, match }) => {
             </ListItem>
             <Divider />
             <ListItem>
-              <Typography>Ratings: {product.rating}</Typography>
+              <Typography>
+                Ratings: {Number(product.rating).toFixed(1)}
+              </Typography>
             </ListItem>
             <ListItem
               style={{
