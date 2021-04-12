@@ -4,6 +4,7 @@ import {
   ADD_SHIPPING_ADDRESS_SUCCESS,
   REMOVE_CART_ITEM,
   ADD_PAYMENT_METHOD_SUCCESS,
+  RESET_CART_ITEM,
 } from "../constants/cartConstants";
 
 export const cartReducer = (
@@ -14,13 +15,13 @@ export const cartReducer = (
     case ADD_CART_ITEM:
       const item = action.payload;
 
-      const existItem = state.cartItems.find((x) => x._id === item._id);
+      const existItem = state.cartItems.find((x) => x.product === item.product);
 
       if (existItem) {
         return {
           ...state,
           cartItems: state.cartItems.map((x) =>
-            x._id === item._id ? item : x
+            x.product === item.product ? item : x
           ),
         };
       } else {
@@ -32,8 +33,10 @@ export const cartReducer = (
     case REMOVE_CART_ITEM:
       return {
         ...state,
-        cartItems: state.cartItems.filter((x) => x._id !== action.payload),
+        cartItems: state.cartItems.filter((x) => x.product !== action.payload),
       };
+    case RESET_CART_ITEM:
+      return { cartItems: [] };
     case ADD_SHIPPING_ADDRESS_REQUEST:
       return { ...state, loading: true };
     case ADD_SHIPPING_ADDRESS_SUCCESS:

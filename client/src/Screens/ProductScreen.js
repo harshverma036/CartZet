@@ -97,7 +97,7 @@ const ProductScreen = ({ history, match }) => {
             </ListItem>
             <Divider />
             <ListItem>
-              <Typography variant="h5">Price: ${product.price}</Typography>
+              <Typography variant="h5">Price: ₹ {product.price}</Typography>
             </ListItem>
             <Divider />
             <ListItem>

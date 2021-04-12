@@ -7,7 +7,6 @@ import {
   Grid,
   Box,
   Typography,
-  Hidden,
 } from "@material-ui/core";
 import Loader from "../Components/Loader";
 import { useDispatch, useSelector } from "react-redux";
@@ -61,7 +60,7 @@ const HomeScreen = ({ match, history }) => {
                 <CardContent>
                   <Typography>{product.name}</Typography>
                   <Ratings value={product.rating} />
-                  <Typography variant="h5">${product.price}</Typography>
+                  <Typography variant="h5">₹ {product.price}</Typography>
                 </CardContent>
               </CardActionArea>
             </Card>

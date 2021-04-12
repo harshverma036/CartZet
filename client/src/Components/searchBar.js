@@ -34,7 +34,7 @@ const SearchBar = ({ history }) => {
         required
         fullWidth
       />
-      <IconButton color="inherit" color="primary" type="submit">
+      <IconButton color="primary" type="submit">
         <Search />
       </IconButton>
     </Box>

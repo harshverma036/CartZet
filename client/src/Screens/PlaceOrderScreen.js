@@ -18,6 +18,7 @@ import { grey } from "@material-ui/core/colors";
 import Steps from "../Components/Steps";
 import { useDispatch, useSelector } from "react-redux";
 import { placeOrder } from "../actions/orderActions";
+import { resetCartItems } from "../actions/cartActions";
 
 const PlaceOrderScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -39,9 +40,10 @@ const PlaceOrderScreen = ({ history }) => {
 
   useEffect(() => {
     if (newOrder) {
+      dispatch(resetCartItems());
       history.push(`/order/${newOrder._id}`);
     }
-  }, [newOrder, history]);
+  }, [newOrder, history, dispatch]);
 
   const placeOrderHandler = () => {
     dispatch(
@@ -105,7 +107,7 @@ const PlaceOrderScreen = ({ history }) => {
               <Typography variant="h5">Order Items</Typography>
               <List>
                 {cartItems.map((item) => (
-                  <Fragment key={item._id}>
+                  <Fragment key={item.product}>
                     <ListItem button>
                       <ListItemAvatar>
                         <Avatar alt={item.name} src={item.image} />

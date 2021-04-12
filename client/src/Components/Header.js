@@ -12,7 +12,6 @@ import {
   Menu,
   MenuItem,
   Divider,
-  Grid,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import SideNav from "./SideNav";
@@ -24,7 +23,6 @@ import {
   Brightness3,
   MoreVert,
 } from "@material-ui/icons";
-import SearchBar from "./searchBar";
 import { logoutUser } from "../actions/userActions";
 
 const Header = ({ changeMode }) => {

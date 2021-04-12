@@ -63,7 +63,10 @@ const CartScreen = ({ location, match }) => {
                   <ListItemAvatar>
                     <Avatar alt={item.name} src={item.image} />
                   </ListItemAvatar>
-                  <ListItemText primary={item.name} secondary={item.brand} />
+                  <ListItemText
+                    primary={`${String(item.name).slice(0, 12)}...`}
+                    secondary={item.brand}
+                  />
                   <ListItemSecondaryAction>
                     <FormControl variant="outlined" style={{ marginRight: 18 }}>
                       <InputLabel id="qty">Qunatity</InputLabel>
@@ -87,7 +90,7 @@ const CartScreen = ({ location, match }) => {
                     </FormControl>
                     <IconButton
                       edge="end"
-                      onClick={() => removeFromCartHandler(item._id)}
+                      onClick={() => removeFromCartHandler(item.product)}
                     >
                       <Delete />
                     </IconButton>
@@ -107,7 +110,7 @@ const CartScreen = ({ location, match }) => {
               Total Items: {cartItems.reduce((acc, i) => acc + i.qty, 0)}
             </ListItem>
             <ListItem component={Typography} variant="h6">
-              Total Price:{" "}
+              Total Price: ₹{" "}
               {cartItems
                 .reduce((acc, i) => acc + i.qty * i.price, 0)
                 .toFixed(2)}
