@@ -13,15 +13,22 @@ import {
   Button,
   CircularProgress,
 } from "@material-ui/core";
+import axios from "axios";
+import { PayPalButton } from "react-paypal-button-v2";
 import { Link } from "react-router-dom";
 import { Alert } from "@material-ui/lab";
 import { grey } from "@material-ui/core/colors";
 import Loader from "../Components/Loader";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderDetails, updateDelivery } from "../actions/orderActions";
+import {
+  getOrderDetails,
+  updateDelivery,
+  payOrder,
+} from "../actions/orderActions";
+import { ORDER_PAYMENT_RESET } from "../constants/orderConstants";
 
 const OrderScreen = ({ history, match }) => {
-  const productId = match.params.id;
+  const orderId = match.params.id;
   const dispatch = useDispatch();
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -29,6 +36,13 @@ const OrderScreen = ({ history, match }) => {
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, order, error } = orderDetails;
+
+  const orderPayment = useSelector((state) => state.orderPayment);
+  const {
+    loading: paymentLoading,
+    success: paymentSuccess,
+    error: paymentError,
+  } = orderPayment;
 
   const orderDelivery = useSelector((state) => state.orderDelivery);
   const {
@@ -38,17 +52,35 @@ const OrderScreen = ({ history, match }) => {
   } = orderDelivery;
 
   useEffect(() => {
+    dispatch({ type: ORDER_PAYMENT_RESET });
     if (!userInfo) {
       history.push("/login");
     }
-    if (deliverySuccess) {
-      dispatch(getOrderDetails(productId));
+
+    const paypalScript = async () => {
+      const { data } = await axios.get("/paypal");
+      console.log(data);
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+      script.async = true;
+      document.body.appendChild(script);
+    };
+
+    paypalScript();
+    if (deliverySuccess || paymentSuccess) {
+      dispatch(getOrderDetails(orderId));
     }
-    dispatch(getOrderDetails(productId));
-  }, [userInfo, history, dispatch, productId, deliverySuccess]);
+    dispatch(getOrderDetails(orderId));
+  }, [userInfo, history, dispatch, orderId, deliverySuccess, paymentSuccess]);
 
   const updateDeliveryHandler = () => {
-    dispatch(updateDelivery(productId));
+    dispatch(updateDelivery(orderId));
+  };
+
+  const paymentSuccessHandler = (paymentResult) => {
+    console.log(paymentResult);
+    dispatch(payOrder(orderId, paymentResult));
   };
 
   return loading ? (
@@ -59,7 +91,7 @@ const OrderScreen = ({ history, match }) => {
     <Box mt={5}>
       <Grid container justify="center">
         <Grid item md={7} xs={12}>
-          <Typography variant="h4" style={{ marginBottom: 26 }}>
+          <Typography variant="h5" style={{ marginBottom: 26 }}>
             ORDER ID {order._id}
           </Typography>
           <Grid container>
@@ -210,6 +242,16 @@ const OrderScreen = ({ history, match }) => {
                   &nbsp; &nbsp;
                   {"Mark As Delivered"}
                 </Button>
+              )}
+            </ListItem>
+            <ListItem component={Box} display="flex" flexDirection="column">
+              {paymentLoading && <Loader />}
+              {paymentError && <Alert severity="error">{error}</Alert>}
+              {!order.isPaid && (
+                <PayPalButton
+                  amount={order.totalPrice}
+                  onSuccess={paymentSuccessHandler}
+                />
               )}
             </ListItem>
           </List>
