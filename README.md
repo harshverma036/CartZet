@@ -29,7 +29,7 @@ npm run dev
 This command will start client and server side servers.
 Visit http://localhost:3000/
 
-## Data Import
+## Data Import/Destroy
 
 Import dummy data to work with Run: -
 
