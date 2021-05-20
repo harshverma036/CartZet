@@ -16,3 +16,15 @@ Install client side dependencies to run project locally: -
 cd CartZet/client
 npm install
 ```
+
+## Run Locally
+
+To run server locally: -
+
+```bash
+cd CartZet
+npm run dev
+```
+
+This command will start client and server side servers.
+Visit http://localhost:3000/
