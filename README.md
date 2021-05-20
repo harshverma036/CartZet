@@ -57,3 +57,7 @@ JWT_SECRET =
 ```
 
 Enter mongodb URI to to connect with database. And any random text to JWT_SECRET
+
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
