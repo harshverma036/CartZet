@@ -28,3 +28,19 @@ npm run dev
 
 This command will start client and server side servers.
 Visit http://localhost:3000/
+
+## Data Import
+
+Import dummy data to work with Run: -
+
+```bash
+cd CartZet
+npm run import:data
+```
+
+If you want to delete all imported data. Run: -
+
+```bash
+cd CartZet
+npm run destroy:data
+```
