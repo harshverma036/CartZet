@@ -9,3 +9,10 @@ Install server side dependencies to run project locally: -
 cd CartZet
 npm install
 ```
+
+Install client side dependencies to run project locally: -
+
+```bash
+cd CartZet/client
+npm install
+```
